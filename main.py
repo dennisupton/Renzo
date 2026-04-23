@@ -35,12 +35,12 @@ def main():
             for i in range(len(inspector.nodes)):
                 if inspector.nodes[i].indent > 0:
                     if len(inspector.nodes) >= i+2 and inspector.nodes[i+1].indent == inspector.nodes[i].indent:
-                        lines[i+1] = "├─"+inspector.nodes[i].name.split(' ', 1)[0]
+                        lines[i+1] = " ├─"+inspector.nodes[i].name.split(' ', 1)[0]
                     else:
-                        lines[i+1] = "└─"+inspector.nodes[i].name.split(' ', 1)[0]
+                        lines[i+1] = " └─"+inspector.nodes[i].name.split(' ', 1)[0]
                 else:
-                    lines[i+1] = inspector.nodes[i].name
-
+                    lines[i+1] = " "+inspector.nodes[i].name
+            lines[inspector.selectedNode+1] = ">" + lines[inspector.selectedNode+1][1:]
             for l in range(len(lines)):
                 if len(lines[l]) < term.width//2:
                     lines[l] = lines[l].ljust(term.width//2, " ")
