@@ -25,6 +25,7 @@ class inspectorPanel:
         indent = 0
         newNodeName = False
         nodeName = ""
+        nodeProperties = ""
         for i in html:
             if i == "<":
                 newNodeName = True
@@ -44,5 +45,13 @@ class inspectorPanel:
     
 class node:
     def __init__(self, name, indent):
-        self.name = name
+        self.name = name.split(" ", -1)[0]
         self.indent = indent
+        self.parseProperties(name.split(" ", -1)[1:])
+    
+    def parseProperties(self,rawList):
+        self.properties = {}
+        for i in rawList:
+            raw = i.split("=",-1)
+            if len(raw) > 1:
+                self.properties[raw[0]] = raw[1]

@@ -35,9 +35,9 @@ def main():
             for i in range(len(inspector.nodes)):
                 if inspector.nodes[i].indent > 0:
                     if len(inspector.nodes) >= i+2 and inspector.nodes[i+1].indent == inspector.nodes[i].indent:
-                        lines[i+1] = " ├─"+inspector.nodes[i].name.split(' ', 1)[0]
+                        lines[i+1] = " ├─"+inspector.nodes[i].name
                     else:
-                        lines[i+1] = " └─"+inspector.nodes[i].name.split(' ', 1)[0]
+                        lines[i+1] = " └─"+inspector.nodes[i].name
                 else:
                     lines[i+1] = " "+inspector.nodes[i].name
             lines[inspector.selectedNode+1] = ">" + lines[inspector.selectedNode+1][1:]
@@ -47,8 +47,10 @@ def main():
                 lines[l] += "│"
 
             lines[0] += "Inspector".center(term.width//2," ")
-
-
+            idx = 0
+            for key in inspector.nodes[inspector.selectedNode].properties:
+                lines[idx+1] += key + inspector.nodes[inspector.selectedNode].properties[key]
+                idx += 1
             print(term.home + term.clear,end="",flush=True)
             render(lines)
 
