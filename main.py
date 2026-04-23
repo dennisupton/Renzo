@@ -22,9 +22,9 @@ def main():
             key = term.inkey(timeout=0.01)
 
             if key:
-                if key.code == term.KEY_UP:
+                if key == "j" or key.code == term.KEY_UP:
                     inspector.up()
-                if key.code == term.KEY_DOWN:
+                if key == "k" or key.code == term.KEY_DOWN:
                     inspector.down()
 
             lines = [" "]*(term.height-1)
