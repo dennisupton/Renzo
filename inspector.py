@@ -72,6 +72,9 @@ class propertiesPanel:
         self.selectedProperty = 0
         self.editing = False
 
+    def escape(self):
+        panel = nodeSelector
+
     def up(self):
         self.selectedProperty -= 1
         if self.selectedProperty < 0:
