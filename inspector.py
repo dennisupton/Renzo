@@ -31,6 +31,7 @@ class inspectorPanel:
     def enter(self):
         global panel, propertyEditor
         panel = propertyEditor
+        propertiesPanel.selectedProperty = 0
 
     def parse(self,html):
         self.nodes = []
@@ -73,6 +74,7 @@ class propertiesPanel:
         self.editing = False
 
     def escape(self):
+        global panel, nodeSelector
         panel = nodeSelector
 
     def up(self):
