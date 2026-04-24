@@ -27,6 +27,8 @@ def limitLineLength(string,maxLength):
         return string[:maxLength-3] + "..."
     return string
 
+inspector.nodeSelector.parse(file.getRaw())
+indents = inspector.nodeSelector.getIndentList()
 def main():
     with term.fullscreen(), term.cbreak():
         sys.stdout.write("\033[?25l")
@@ -44,14 +46,12 @@ def main():
                     if key.code == term.KEY_ESCAPE:
                         inspector.panel.escape()
 
-                    inspector.panel.key(key)
+                    inspector.panel.keyPress(key,term)
                 except:
                     pass
             lines = [" "]*(term.height-2)
             lines[0] = "Nodes".center(term.width//2," ")
 
-            inspector.nodeSelector.parse(file.getRaw())
-            indents = inspector.nodeSelector.getIndentList()
             for i in range(len(inspector.nodeSelector.nodes)):
                 if len(inspector.nodeSelector.nodes) >= i+2 and checkExtendedIndent(indents,i):
                     lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+inspector.nodeSelector.nodes[i].name + str(inspector.nodeSelector.nodes[i].indent)
@@ -63,20 +63,26 @@ def main():
                 if len(lines[l]) < term.width//2:
                     lines[l] = lines[l].ljust(term.width//2, " ")
                 lines[l] += "│"
-            
             inspector.propertyEditor.properties = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].properties
+            inspector.propertyEditor.selectedNode = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode]
             lines[0] += "Inspector".center(term.width//2," ")
             idx = 0
             for key in inspector.propertyEditor.properties:
                 if key == inspector.propertyEditor.getSelectedKey() and inspector.panel == inspector.propertyEditor:
-                    lines[idx+1] += ">" + key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
+                    lines[idx+1] += ">"
                 else:
-                    lines[idx+1] += " " + key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
+                    lines[idx+1] += " "
+                if key == inspector.propertyEditor.getSelectedKey() and inspector.propertyEditor.editing:
+                    text = inspector.propertyEditor.properties[key]
+                    lines[idx+1] += key + " : " + text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]
+                else:
+                    lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
+
                 idx += 1
             
 
 
-            lines.append("Webpage hosted at : 127.0.0.1:8080")
+            lines.append("Webpage hosted at : 127.0.0.1:8080"+str(file.debug))
             print(term.home + term.clear,end="",flush=True)
             render(lines)
             

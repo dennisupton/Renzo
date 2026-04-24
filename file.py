@@ -15,7 +15,7 @@ currentFile='''
 </html>
 '''
 
-
+debug = ""
 
 
 

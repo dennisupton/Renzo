@@ -1,5 +1,5 @@
 import re
-
+import file
 
 
 def hasEnd(node):
@@ -70,6 +70,7 @@ class inspectorPanel:
 class propertiesPanel:
     def __init__(self):
         self.properties = {}
+        self.selectedNode = None
         self.selectedProperty = 0
         self.editing = False
 
@@ -77,6 +78,25 @@ class propertiesPanel:
         global panel, nodeSelector
         panel = nodeSelector
 
+    def enter(self):
+        if self.editing == False:
+            self.editing = True
+            self.cursorPos = len(self.properties[self.getSelectedKey()])
+    
+    def keyPress(self,keyName,term):
+
+        if keyName.code == term.KEY_LEFT and self.cursorPos >0:
+            self.cursorPos -= 1
+        elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.properties[self.getSelectedKey()]):
+            self.cursorPos += 1
+        elif keyName.code == term.KEY_ENTER and self.editing:
+            return
+        elif keyName.code == term.KEY_ESCAPE and self.editing:
+            self.editing = False
+        else:
+            self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
+            self.cursorPos += 1
+            
     def up(self):
         self.selectedProperty -= 1
         if self.selectedProperty < 0:
@@ -89,7 +109,7 @@ class propertiesPanel:
             self.selectedProperty = len(self.properties)-1
 
     def getSelectedKey(self):
-        return list(self.properties)[self.selectedProperty]
+        return str(list(self.properties)[self.selectedProperty])
 
 class node:
     def __init__(self, name, indent):
@@ -97,6 +117,8 @@ class node:
         self.indent = indent
         self.parseProperties(" ".join(name.split(" ", -1)[1:]))
     
+    
+
     def parseProperties(self,raw):
         self.properties = dict(re.findall(r'(\w+)="([^"]*)"', raw))
 
