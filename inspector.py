@@ -1,5 +1,7 @@
 import re
 
+
+
 def hasEnd(node):
     if node.startswith("!DOCTYPE") or node.startswith("html") or node.startswith("meta"):
         return False
@@ -25,6 +27,10 @@ class inspectorPanel:
         self.selectedNode += 1
         if self.selectedNode > len(self.nodes)-1:
             self.selectedNode = len(self.nodes)-1
+
+    def enter(self):
+        global panel, propertyEditor
+        panel = propertyEditor
 
     def parse(self,html):
         self.nodes = []
@@ -94,3 +100,8 @@ class inner:
         self.name = '"'+name+'"'
         self.indent = indent
         self.properties = {"name":name}
+
+
+nodeSelector = inspectorPanel()
+propertyEditor = propertiesPanel()
+panel = nodeSelector
