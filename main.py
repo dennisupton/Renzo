@@ -2,6 +2,8 @@ from blessed import Terminal
 import sys
 import file
 import inspector
+import network
+
 term = Terminal()
 
 
