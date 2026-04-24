@@ -1,3 +1,4 @@
+import re
 
 def hasEnd(node):
     if node.startswith("!DOCTYPE") or node.startswith("html") or node.startswith("meta"):
@@ -47,11 +48,7 @@ class node:
     def __init__(self, name, indent):
         self.name = name.split(" ", -1)[0]
         self.indent = indent
-        self.parseProperties(name.split(" ", -1)[1:])
+        self.parseProperties(" ".join(name.split(" ", -1)[1:]))
     
-    def parseProperties(self,rawList):
-        self.properties = {}
-        for i in rawList:
-            raw = i.split("=",-1)
-            if len(raw) > 1:
-                self.properties[raw[0]] = raw[1]
+    def parseProperties(self,raw):
+        self.properties = dict(re.findall(r'(\w+)="([^"]*)"', raw))
