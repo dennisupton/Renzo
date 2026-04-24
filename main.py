@@ -22,6 +22,11 @@ def checkExtendedIndent(indents,index):
             return True
     return True
 
+def limitLineLength(string,maxLength):
+    if len(string) > maxLength:
+        return string[:maxLength-3] + "..."
+    return string
+
 def main():
     with term.fullscreen(), term.cbreak():
         sys.stdout.write("\033[?25l")
@@ -64,9 +69,9 @@ def main():
             idx = 0
             for key in inspector.propertyEditor.properties:
                 if key == inspector.propertyEditor.getSelectedKey() and inspector.panel == inspector.propertyEditor:
-                    lines[idx+1] += ">" + key + "    " + inspector.propertyEditor.properties[key]
+                    lines[idx+1] += ">" + key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
                 else:
-                    lines[idx+1] += " " + key + "    " + inspector.propertyEditor.properties[key]
+                    lines[idx+1] += " " + key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
                 idx += 1
             
 
