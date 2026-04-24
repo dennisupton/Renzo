@@ -10,6 +10,7 @@ currentFile='''
 </head>
 <body>
     <h1>hello!</h1>
+    <div><div>hello</div></div>
 </body>
 </html>
 '''
