@@ -89,10 +89,14 @@ class propertiesPanel:
             self.cursorPos -= 1
         elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.properties[self.getSelectedKey()]):
             self.cursorPos += 1
+        elif keyName.code == term.KEY_BACKSPACE and self.editing:
+            self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
+            self.cursorPos -= 1
         elif keyName.code == term.KEY_ENTER and self.editing:
             return
         elif keyName.code == term.KEY_ESCAPE and self.editing:
             self.editing = False
+
         else:
             self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
             self.cursorPos += 1
