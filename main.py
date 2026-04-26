@@ -101,7 +101,7 @@ def main():
             
 
             lines[-1] = "Arrow keys to navigate | Enter to Edit | Press Esc to go back"
-            url = "127.0.0.1"
+            url = "127.0.0.1:5050"
             lines.append("Webpage hosted at : "+hyperlink(url,url)+" "+str(file.debug))
             print(term.home + term.clear,end="",flush=True)
             render(lines)
