@@ -54,9 +54,9 @@ def main():
 
             for i in range(len(inspector.nodeSelector.nodes)):
                 if len(inspector.nodeSelector.nodes) >= i+2 and checkExtendedIndent(indents,i):
-                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+inspector.nodeSelector.nodes[i].name + str(inspector.nodeSelector.nodes[i].indent)
+                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+inspector.nodeSelector.nodes[i].name 
                 else:
-                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"└─"+inspector.nodeSelector.nodes[i].name + str(inspector.nodeSelector.nodes[i].indent)
+                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"└─"+inspector.nodeSelector.nodes[i].name
 
             lines[inspector.nodeSelector.selectedNode+1] = ">" + lines[inspector.nodeSelector.selectedNode+1][1:]
             for l in range(len(lines)):
