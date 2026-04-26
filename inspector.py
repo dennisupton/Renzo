@@ -77,7 +77,8 @@ class inspectorPanel:
             self.nodes.pop(self.selectedNode+1)
             self.nodes.insert(self.selectedNode,temp)
         elif keyName == '\x1b[1;5C':  # ctrl+right
-            if self.nodes[self.selectedNode].indent <= self.nodes[self.selectedNode-1].indent:
+            global nodes
+            if (type(self.nodes[self.selectedNode-1]) == node and self.nodes[self.selectedNode].indent <= self.nodes[self.selectedNode-1].indent) or self.nodes[self.selectedNode].indent < self.nodes[self.selectedNode-1].indent:
                 self.nodes[self.selectedNode].indent += 1
 
         elif keyName == '\x1b[1;5D':  # ctrl+left
