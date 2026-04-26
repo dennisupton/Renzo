@@ -67,7 +67,6 @@ class inspectorPanel:
             self.editing = True
         elif keyName == "x":
             self.nodes.pop(self.selectedNode)
-            file.convertToString(self.nodes)
         elif keyName == '\x1b[1;5B':  # ctrl+down
             temp = self.nodes[self.selectedNode-1]
             self.nodes.pop(self.selectedNode-1)
@@ -79,9 +78,11 @@ class inspectorPanel:
             self.nodes.insert(self.selectedNode,temp)
         elif keyName == '\x1b[1;5C':  # ctrl+right
             self.nodes[self.selectedNode].indent += 1
+
         elif keyName == '\x1b[1;5D':  # ctrl+left
             self.nodes[self.selectedNode].indent -= 1
-    
+        file.convertToString(self.nodes)
+
     def getSelectedNode(self):
         return self.nodes[self.selectedNode]
 

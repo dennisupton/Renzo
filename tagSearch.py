@@ -26,7 +26,7 @@ class searchPanel:
         inspector.panel = inspector.nodeSelector
         indent = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].indent + 1
         inspector.nodeSelector.nodes.insert(inspector.nodeSelector.selectedNode+1,inspector.node(self.results[self.selection]["tag"],indent))
-        file.convertToString()
+        file.convertToString(inspector.nodeSelector.nodes)
 
 
     def escape(self):

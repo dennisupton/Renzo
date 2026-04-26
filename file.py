@@ -48,6 +48,10 @@ def convertToString(nodes):
                     skipped += 1
                 nodeStack.pop(-1)
                 skipped -= 1
+        elif lastNode and i.indent == lastNode.indent:
+            if hasEnd(lastNode.name) and not isinstance(lastNode, inspector.inner):
+                res += "    "*lastNode.indent+"</"+lastNode.name+">"
+                res += "\n"
         elif lastNode and i.indent > lastNode.indent:
             res += "\n"
 
