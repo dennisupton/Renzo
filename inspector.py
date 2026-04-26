@@ -68,7 +68,16 @@ class inspectorPanel:
         elif keyName == "x":
             self.nodes.pop(self.selectedNode)
             file.convertToString()
-        
+        elif keyName == '\x1b[1;5B':  # ctrl+down
+            temp = self.nodes[self.selectedNode-1]
+            self.nodes.pop(self.selectedNode-1)
+            self.nodes.insert(self.selectedNode,temp)
+
+        elif keyName == '\x1b[1;5A':  # ctrl+up
+            temp = self.nodes[self.selectedNode+1]
+            self.nodes.pop(self.selectedNode+1)
+            self.nodes.insert(self.selectedNode,temp)
+            #self.selectedNode += 1
     def getSelectedNode(self):
         return self.nodes[self.selectedNode]
 
