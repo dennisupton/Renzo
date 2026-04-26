@@ -1,11 +1,7 @@
 import re
 import file
+import inspector
 
-
-def hasEnd(node):
-    if node.startswith("!DOCTYPE") or node.startswith("html") or node.startswith("meta"):
-        return False
-    return True
 
 class inspectorPanel:
     def __init__(self):
@@ -51,7 +47,7 @@ class inspectorPanel:
             elif newNodeName and i == ">":
                 inNode = False
                 self.nodes.append(node(nodeName, indent))
-                if hasEnd(nodeName):
+                if file.hasEnd(nodeName):
                     indent += 1
                 nodeName = ""
                 newNodeName = False
@@ -95,8 +91,8 @@ class propertiesPanel:
         elif keyName.code == term.KEY_ENTER and self.editing:
             return
         elif keyName.code == term.KEY_ESCAPE and self.editing:
+            file.convertToString(inspector.nodeSelector.nodes)
             self.editing = False
-
         elif not keyName.code in [term.KEY_LEFT,term.KEY_RIGHT,term.KEY_BACKSPACE]:
             self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
             self.cursorPos += 1
@@ -130,7 +126,7 @@ class inner:
     def __init__(self, name, indent):
         self.name = '"'+name+'"'
         self.indent = indent
-        self.properties = {"name":name}
+        self.properties = {}
 
 
 nodeSelector = inspectorPanel()

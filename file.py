@@ -1,4 +1,4 @@
-
+import inspector
 
 currentFile='''
 <!DOCTYPE html>
@@ -17,6 +17,55 @@ currentFile='''
 
 debug = ""
 
+def convertToString(nodes):
+    global currentFile
+    res = ""
+    lastNode = None
+    nodeStack = []
+    for i in nodes:
+        if lastNode and i.indent < lastNode.indent:
+            skipped = 0
+            for indent in range(lastNode.indent-i.indent):
+                if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
+                    res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+                    res += "\n"
+                if isinstance(nodeStack[-1], inspector.inner):
+                    skipped += 1
+                nodeStack.pop(-1)
+            for x in range(skipped):
+                if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
+                    res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+                    res += "\n"
+                if isinstance(nodeStack[-1], inspector.inner):
+                    skipped += 1
+                nodeStack.pop(-1)
+        elif lastNode and i.indent > lastNode.indent:
+            res += "\n"
+
+
+        if isinstance(i, inspector.inner):
+            res += "    "*i.indent+i.name[1:-1]
+            res += "\n"
+
+        else:
+            res += "    "*i.indent+"<"+i.name+">"
+        if not hasEnd(i.name):
+            res += "\n"
+        
+        nodeStack.append(i)
+        lastNode = i
+
+    for i in nodeStack:
+        if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
+            res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+            res += "\n"
+        nodeStack.pop(-1)
+
+    currentFile = res
+def hasEnd(node):
+    if node.startswith("!DOCTYPE") or node.startswith("html") or node.startswith("meta"):
+        return False
+    return True
 
 
 def getRaw():
