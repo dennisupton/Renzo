@@ -14,13 +14,18 @@ def index():
 <body>
 <div id="content"></div>
 <script>
-const es = new EventSource("/stream");
-es.onmessage = e => {
-  const html = e.data.replace(/\\n/g, "\n").replace(/\\t/g, "\t");
-  document.open();
-  document.write(html);
-  document.close();
-};
+function connect() {
+    const es = new EventSource("/stream");
+    es.onmessage = e => {
+        const html = e.data.replace(/\\n/g, "\n").replace(/\\t/g, "\t");
+        document.getElementById("content").innerHTML = html;
+    };
+    es.onerror = () => {
+        es.close();
+        setTimeout(connect, 1000);
+    };
+}
+connect();
 </script>
 </body>
 </html>"""
@@ -40,4 +45,4 @@ def stream():
             time.sleep(0.2)
     return Response(stream_with_context(event_stream()), mimetype="text/event-stream")
 
-threading.Thread(target=app.run, kwargs={"port": 5050}, daemon=True).start()
+threading.Thread(target=app.run, kwargs={"port": 5090}, daemon=True).start()

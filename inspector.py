@@ -1,7 +1,7 @@
 import re
 import file
 import inspector
-
+import tagSearch
 
 class inspectorPanel:
     def __init__(self):
@@ -57,7 +57,18 @@ class inspectorPanel:
             elif len(keyName) == 1 and keyName.isprintable():
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
                 self.cursorPos += 1
-    
+        elif keyName == "n":
+            global panel
+            panel = tagSearch.nodeSearch
+        elif keyName == "i":
+            self.nodes.insert(self.selectedNode+1,inner("",self.nodes[self.selectedNode].indent))
+            self.selectedNode += 1
+            self.cursorPos = 0
+            self.editing = True
+        elif keyName == "x":
+            self.nodes.pop(self.selectedNode)
+            file.convertToString()
+        
     def getSelectedNode(self):
         return self.nodes[self.selectedNode]
 
@@ -115,7 +126,6 @@ class propertiesPanel:
     def enter(self):
         if self.editing == False:
             if type(self.properties[self.getSelectedKey()]) == str:
-                file.debug += "enter edit"
                 self.editing = True
                 self.cursorPos = len(self.properties[self.getSelectedKey()])
             elif type(self.properties[self.getSelectedKey()]) == bool:

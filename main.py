@@ -3,7 +3,7 @@ import sys
 import file
 import inspector
 import network
-
+import tagSearch
 term = Terminal()
 
 
@@ -55,7 +55,8 @@ def main():
                 except Exception as e:
                     file.debug = "error happened" + str(e)
             lines = [" "]*(term.height-2)
-            lines[0] = "Nodes".center(term.width//2," ")
+            if inspector.panel == inspector.nodeSelector:
+                lines[0] = "Nodes".center(term.width//2,"─")
 
             for i in range(len(inspector.nodeSelector.nodes)):
                 text = inspector.nodeSelector.nodes[i].name 
@@ -75,33 +76,45 @@ def main():
                 if len(lines[l]) < term.width//2:
                     lines[l] = lines[l].ljust(term.width//2, " ")
                 lines[l] += "│"
-            
-            inspector.propertyEditor.properties = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].properties
-            inspector.propertyEditor.selectedNode = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode]
-            lines[0] += "Inspector".center(term.width//2," ")
-            idx = 0
-            for key in inspector.propertyEditor.properties:
-                if key == inspector.propertyEditor.getSelectedKey() and inspector.panel == inspector.propertyEditor:
-                    lines[idx+1] += ">"
-                else:
-                    lines[idx+1] += " "
-                if key == inspector.propertyEditor.getSelectedKey() and inspector.propertyEditor.editing:
-                    text = inspector.propertyEditor.properties[key]
-                    lines[idx+1] += key + " : " + text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]
-                else:
-                    if type(inspector.propertyEditor.properties[key]) == str:
-                        lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
-                    elif type(inspector.propertyEditor.properties[key]) == bool:
-                        if inspector.propertyEditor.properties[key]:
-                            lines[idx+1] += key + " : " + "●"
+            if type(inspector.panel) == tagSearch.searchPanel:
+                lines[0] += "Tag Search".center(term.width//2,"─")
+                lines[1] += inspector.panel.search[:inspector.panel.cursorPos] + "|" + inspector.panel.search[inspector.panel.cursorPos:]
+                for i in range(2,len(lines)):
+                    if len(inspector.panel.results) > i-2:
+                        if i-2 == inspector.panel.selection:
+                            lines[i] += limitLineLength("> "+inspector.panel.results[i-2]["tag"]+" - "+inspector.panel.results[i-2]["description"],term.width//2)
                         else:
-                            lines[idx+1] += key + " : " + "○"
+                            lines[i] += limitLineLength("  "+inspector.panel.results[i-2]["tag"]+" - "+inspector.panel.results[i-2]["description"],term.width//2)
+            else:
+                inspector.propertyEditor.properties = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].properties
+                inspector.propertyEditor.selectedNode = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode]
+                if inspector.panel is inspector.propertyEditor:
+                    lines[0] += "Inspector".center(term.width//2,"─")
+                else:
+                    lines[0] += "Inspector".center(term.width//2," ")
+                idx = 0
+                for key in inspector.propertyEditor.properties:
+                    if key == inspector.propertyEditor.getSelectedKey() and inspector.panel == inspector.propertyEditor:
+                        lines[idx+1] += ">"
+                    else:
+                        lines[idx+1] += " "
+                    if key == inspector.propertyEditor.getSelectedKey() and inspector.propertyEditor.editing:
+                        text = inspector.propertyEditor.properties[key]
+                        lines[idx+1] += key + " : " + text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]
+                    else:
+                        if type(inspector.propertyEditor.properties[key]) == str:
+                            lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
+                        elif type(inspector.propertyEditor.properties[key]) == bool:
+                            if inspector.propertyEditor.properties[key]:
+                                lines[idx+1] += key + " : " + "●"
+                            else:
+                                lines[idx+1] += key + " : " + "○"
 
-                idx += 1
-            
+                    idx += 1
+                
 
             lines[-1] = "Arrow keys to navigate | Enter to Edit | Press Esc to go back"
-            url = "127.0.0.1:5050"
+            url = "127.0.0.1:5090"
             lines.append("Webpage hosted at : "+hyperlink(url,url)+" "+str(file.debug))
             print(term.home + term.clear,end="",flush=True)
             render(lines)
