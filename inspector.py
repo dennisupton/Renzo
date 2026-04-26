@@ -37,9 +37,13 @@ class inspectorPanel:
             else:
                 panel = propertyEditor
                 propertiesPanel.selectedProperty = 0
+        else:
+            file.convertToString(nodeSelector.nodes)
+            self.editing = False
 
     def escape(self):
         if self.editing:
+            file.convertToString(nodeSelector.nodes)
             self.editing = False
     def keyPress(self,keyName,term):
         if self.editing:
@@ -50,14 +54,6 @@ class inspectorPanel:
             elif keyName.code == term.KEY_BACKSPACE and self.editing:
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos-1] + self.getSelectedNode().name[self.cursorPos:]
                 self.cursorPos -= 1
-            elif keyName.code == term.KEY_ENTER and self.editing:
-                global nodeSelector
-                file.convertToString(nodeSelector.nodes)
-                self.editing = False
-            elif keyName.code == term.KEY_ESCAPE and self.editing:
-                global nodeSelector
-                file.convertToString(nodeSelector.nodes)
-                self.editing = False
             elif len(keyName) == 1 and keyName.isprintable():
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
                 self.cursorPos += 1
