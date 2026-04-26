@@ -97,7 +97,7 @@ class propertiesPanel:
         elif keyName.code == term.KEY_ESCAPE and self.editing:
             self.editing = False
 
-        else:
+        elif not keyName.code in [term.KEY_LEFT,term.KEY_RIGHT,term.KEY_BACKSPACE]:
             self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
             self.cursorPos += 1
             
