@@ -76,7 +76,10 @@ def main():
                     text = inspector.propertyEditor.properties[key]
                     lines[idx+1] += key + " : " + text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]
                 else:
-                    lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
+                    if type(inspector.propertyEditor.properties[key]) == str:
+                        lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
+                    if type(inspector.propertyEditor.properties[key]) == bool:
+                        lines[idx+1] += key + " : " + str( inspector.propertyEditor.properties[key])
 
                 idx += 1
             
@@ -85,6 +88,5 @@ def main():
             lines.append("Webpage hosted at : 127.0.0.1:8080"+str(file.debug))
             print(term.home + term.clear,end="",flush=True)
             render(lines)
-            
 
 main()

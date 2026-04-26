@@ -120,7 +120,8 @@ class node:
     
 
     def parseProperties(self,raw):
-        self.properties = dict(re.findall(r'(\w+)="([^"]*)"', raw))
+        matches = re.findall(r'(\w+)(?:="([^"]*)")?', raw)
+        self.properties = {k: (v if v != '' else True) for k, v in matches}
 
 class inner:
     def __init__(self, name, indent):

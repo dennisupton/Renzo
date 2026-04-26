@@ -17,6 +17,14 @@ currentFile='''
 
 debug = ""
 
+def propertiesToString(properties):
+    res = ""
+    for key,value in properties.items():
+        if type(value) == str:
+            res += " "+key+'="'+value+'"'
+        elif type(value) == bool and value:
+            res += " "+key
+    return res
 def convertToString(nodes):
     global currentFile
     res = ""
@@ -29,16 +37,17 @@ def convertToString(nodes):
                 if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
                     res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
                     res += "\n"
-                if isinstance(nodeStack[-1], inspector.inner):
+                if isinstance(nodeStack[-1], inspector.inner) or not hasEnd(nodeStack[-1].name):
                     skipped += 1
                 nodeStack.pop(-1)
-            for x in range(skipped):
+            while skipped > 0 and len(nodeStack)>0:
                 if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
                     res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
                     res += "\n"
-                if isinstance(nodeStack[-1], inspector.inner):
+                if isinstance(nodeStack[-1], inspector.inner) or not hasEnd(nodeStack[-1].name):
                     skipped += 1
                 nodeStack.pop(-1)
+                skipped -= 1
         elif lastNode and i.indent > lastNode.indent:
             res += "\n"
 
@@ -48,22 +57,33 @@ def convertToString(nodes):
             res += "\n"
 
         else:
-            res += "    "*i.indent+"<"+i.name+">"
+            res += "    "*i.indent+"<"+i.name+ propertiesToString(i.properties)+">"
         if not hasEnd(i.name):
             res += "\n"
         
         nodeStack.append(i)
         lastNode = i
-
-    for i in nodeStack:
+    skipped = 0
+    while len(nodeStack)>0:
         if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
             res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
             res += "\n"
+        if isinstance(nodeStack[-1], inspector.inner):
+            skipped += 1
         nodeStack.pop(-1)
+    while skipped > 0 and len(nodeStack)>0:
+        if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
+            res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+            res += "\n"
+        if isinstance(nodeStack[-1], inspector.inner) or not hasEnd(nodeStack[-1].name):
+            skipped += 1
+        nodeStack.pop(-1)
+        skipped -= 1
 
     currentFile = res
+
 def hasEnd(node):
-    if node.startswith("!DOCTYPE") or node.startswith("html") or node.startswith("meta"):
+    if node.startswith("!DOCTYPE") or node.startswith("meta"):
         return False
     return True
 
