@@ -93,7 +93,7 @@ def main():
             
 
 
-            lines.append("Webpage hosted at : 127.0.0.1:8090"+str(file.debug))
+            lines.append("Webpage hosted at : 127.0.0.1:5050"+str(file.debug))
             #print(term.home + term.clear,end="",flush=True)
             render(lines)
 

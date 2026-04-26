@@ -51,9 +51,10 @@ class inspectorPanel:
                 self.cursorPos -= 1
             elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.getSelectedNode().name):
                 self.cursorPos += 1
-            elif keyName.code == term.KEY_BACKSPACE and self.editing:
+            elif keyName.code == term.KEY_BACKSPACE and self.editing and self.cursorPos > 0:
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos-1] + self.getSelectedNode().name[self.cursorPos:]
-                self.cursorPos -= 1
+                if self.cursorPos > 0:
+                    self.cursorPos -= 1
             elif len(keyName) == 1 and keyName.isprintable():
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
                 self.cursorPos += 1

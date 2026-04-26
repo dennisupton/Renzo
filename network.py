@@ -39,4 +39,4 @@ def stream():
             time.sleep(0.2)
     return Response(stream_with_context(event_stream()), mimetype="text/event-stream")
 
-threading.Thread(target=app.run, kwargs={"port": 8090}, daemon=True).start()
+threading.Thread(target=app.run, kwargs={"port": 5050}, daemon=True).start()
