@@ -92,7 +92,10 @@ def main():
                     if type(inspector.propertyEditor.properties[key]) == str:
                         lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
                     elif type(inspector.propertyEditor.properties[key]) == bool:
-                        lines[idx+1] += key + " : " + str( inspector.propertyEditor.properties[key])
+                        if inspector.propertyEditor.properties[key]:
+                            lines[idx+1] += key + " : " + "●"
+                        else:
+                            lines[idx+1] += key + " : " + "○"
 
                 idx += 1
             

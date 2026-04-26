@@ -114,9 +114,12 @@ class propertiesPanel:
 
     def enter(self):
         if self.editing == False:
-            file.debug += "enter edit"
-            self.editing = True
-            self.cursorPos = len(self.properties[self.getSelectedKey()])
+            if type(self.properties[self.getSelectedKey()]) == str:
+                file.debug += "enter edit"
+                self.editing = True
+                self.cursorPos = len(self.properties[self.getSelectedKey()])
+            elif type(self.properties[self.getSelectedKey()]) == bool:
+                self.properties[self.getSelectedKey()] = not self.properties[self.getSelectedKey()]
         else:
             file.convertToString(inspector.nodeSelector.nodes)
             self.editing = False
