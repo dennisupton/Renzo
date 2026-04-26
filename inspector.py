@@ -51,9 +51,12 @@ class inspectorPanel:
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos-1] + self.getSelectedNode().name[self.cursorPos:]
                 self.cursorPos -= 1
             elif keyName.code == term.KEY_ENTER and self.editing:
-                return
+                global nodeSelector
+                file.convertToString(nodeSelector.nodes)
+                self.editing = False
             elif keyName.code == term.KEY_ESCAPE and self.editing:
-                file.convertToString(inspector.nodeSelector.nodes)
+                global nodeSelector
+                file.convertToString(nodeSelector.nodes)
                 self.editing = False
             elif len(keyName) == 1 and keyName.isprintable():
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
@@ -159,7 +162,7 @@ class node:
 
 class inner:
     def __init__(self, name, indent):
-        self.name = '"'+name+'"'
+        self.name = name
         self.indent = indent
         self.properties = {}
 

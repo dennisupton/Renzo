@@ -53,7 +53,7 @@ def convertToString(nodes):
 
 
         if isinstance(i, inspector.inner):
-            res += "    "*i.indent+i.name[1:-1]
+            res += "    "*i.indent+i.name
             res += "\n"
 
         else:

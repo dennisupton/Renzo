@@ -33,7 +33,7 @@ def main():
     with term.fullscreen(), term.cbreak():
         sys.stdout.write("\033[?25l")
         while True:
-            key = term.inkey(timeout=0.00001)
+            key = term.inkey(timeout=0.0005)
 
             if key:
                 try:
@@ -56,7 +56,8 @@ def main():
                 text = inspector.nodeSelector.nodes[i].name 
                 if inspector.nodeSelector.editing and i == inspector.nodeSelector.selectedNode:
                     text = text[:inspector.nodeSelector.cursorPos] + "|" + text[inspector.nodeSelector.cursorPos:]
-                    
+                if isinstance(inspector.nodeSelector.nodes[i],inspector.inner):
+                    text = '"'+text+'"'  
                 if len(inspector.nodeSelector.nodes) >= i+2 and checkExtendedIndent(indents,i):
                     lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+text
                 else:
