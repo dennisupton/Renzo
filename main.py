@@ -86,14 +86,14 @@ def main():
                 else:
                     if type(inspector.propertyEditor.properties[key]) == str:
                         lines[idx+1] += key + " : " + limitLineLength( inspector.propertyEditor.properties[key], term.width//2-(len(key)+4))
-                    if type(inspector.propertyEditor.properties[key]) == bool:
+                    elif type(inspector.propertyEditor.properties[key]) == bool:
                         lines[idx+1] += key + " : " + str( inspector.propertyEditor.properties[key])
 
                 idx += 1
             
 
 
-            lines.append("Webpage hosted at : 127.0.0.1:5050"+str(file.debug))
+            lines.append("Webpage hosted at : 127.0.0.1:5050 "+str(file.debug))
             #print(term.home + term.clear,end="",flush=True)
             render(lines)
 

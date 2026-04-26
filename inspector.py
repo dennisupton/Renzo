@@ -53,8 +53,7 @@ class inspectorPanel:
                 self.cursorPos += 1
             elif keyName.code == term.KEY_BACKSPACE and self.editing and self.cursorPos > 0:
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos-1] + self.getSelectedNode().name[self.cursorPos:]
-                if self.cursorPos > 0:
-                    self.cursorPos -= 1
+                self.cursorPos -= 1
             elif len(keyName) == 1 and keyName.isprintable():
                 self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
                 self.cursorPos += 1
@@ -102,32 +101,35 @@ class propertiesPanel:
         self.selectedNode = None
         self.selectedProperty = 0
         self.editing = False
+        self.cursorPos = 0
 
     def escape(self):
-        global panel, nodeSelector
-        panel = nodeSelector
-        self.selectedProperty = 0
-    
+        if self.editing:
+            file.convertToString(inspector.nodeSelector.nodes)
+            self.editing = False
+        else:
+            global panel, nodeSelector
+            panel = nodeSelector
+            self.selectedProperty = 0
+
     def enter(self):
         if self.editing == False:
+            file.debug += "enter edit"
             self.editing = True
             self.cursorPos = len(self.properties[self.getSelectedKey()])
-    
+        else:
+            file.convertToString(inspector.nodeSelector.nodes)
+            self.editing = False
     def keyPress(self,keyName,term):
 
         if keyName.code == term.KEY_LEFT and self.cursorPos >0:
             self.cursorPos -= 1
         elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.properties[self.getSelectedKey()]):
             self.cursorPos += 1
-        elif keyName.code == term.KEY_BACKSPACE and self.editing:
+        elif keyName.code == term.KEY_BACKSPACE and self.editing and self.cursorPos >0:
             self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
             self.cursorPos -= 1
-        elif keyName.code == term.KEY_ENTER and self.editing:
-            return
-        elif keyName.code == term.KEY_ESCAPE and self.editing:
-            file.convertToString(inspector.nodeSelector.nodes)
-            self.editing = False
-        elif not keyName.code in [term.KEY_LEFT,term.KEY_RIGHT,term.KEY_BACKSPACE]:
+        if len(keyName) == 1 and keyName.isprintable():
             self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
             self.cursorPos += 1
             
