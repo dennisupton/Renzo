@@ -31,8 +31,13 @@ def convertToString(nodes):
     lastNode = None
     nodeStack = []
     for i in nodes:
-        if lastNode and i.indent < lastNode.indent:
+        if lastNode and i.indent <= lastNode.indent:
             skipped = 0
+            if hasEnd(lastNode.name) and not isinstance(lastNode, inspector.inner):
+                res += "    "*lastNode.indent+"</"+lastNode.name+">"
+                res += "\n"
+                nodeStack.remove(lastNode)
+
             for indent in range(lastNode.indent-i.indent):
                 if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
                     res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
@@ -48,10 +53,6 @@ def convertToString(nodes):
                     skipped += 1
                 nodeStack.pop(-1)
                 skipped -= 1
-        elif lastNode and i.indent == lastNode.indent:
-            if hasEnd(lastNode.name) and not isinstance(lastNode, inspector.inner):
-                res += "    "*lastNode.indent+"</"+lastNode.name+">"
-                res += "\n"
         elif lastNode and i.indent > lastNode.indent:
             res += "\n"
 
