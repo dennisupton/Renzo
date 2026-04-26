@@ -27,6 +27,11 @@ def limitLineLength(string,maxLength):
         return string[:maxLength-3] + "..."
     return string
 
+
+def hyperlink(url, text):
+    #    return f"\033]8;;{url}\033\\{text}\033]8;;\033\\"
+    return f"\x1b]8;;{url}\x1b\\\x1b[4m{text}\x1b[0m\x1b]8;;\x1b\\"
+
 inspector.nodeSelector.parse(file.getRaw())
 indents = inspector.nodeSelector.getIndentList()
 def main():
@@ -92,9 +97,10 @@ def main():
                 idx += 1
             
 
-
-            lines.append("Webpage hosted at : 127.0.0.1:5050 "+str(file.debug))
-            #print(term.home + term.clear,end="",flush=True)
+            lines[-1] = "Arrow keys to navigate | Enter to Edit | Press Esc to go back"
+            url = "127.0.0.1"
+            lines.append("Webpage hosted at : "+hyperlink(url,url)+" "+str(file.debug))
+            print(term.home + term.clear,end="",flush=True)
             render(lines)
 
 main()
