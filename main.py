@@ -47,22 +47,29 @@ def main():
                         inspector.panel.escape()
 
                     inspector.panel.keyPress(key,term)
-                except:
-                    pass
+                except Exception as e:
+                    file.debug = "error happened" + str(e)
             lines = [" "]*(term.height-2)
             lines[0] = "Nodes".center(term.width//2," ")
 
             for i in range(len(inspector.nodeSelector.nodes)):
+                text = inspector.nodeSelector.nodes[i].name 
+                if inspector.nodeSelector.editing and i == inspector.nodeSelector.selectedNode:
+                    text = text[:inspector.nodeSelector.cursorPos] + "|" + text[inspector.nodeSelector.cursorPos:]
+                    
                 if len(inspector.nodeSelector.nodes) >= i+2 and checkExtendedIndent(indents,i):
-                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+inspector.nodeSelector.nodes[i].name 
+                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+text
                 else:
-                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"└─"+inspector.nodeSelector.nodes[i].name
+                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"└─"+text
 
             lines[inspector.nodeSelector.selectedNode+1] = ">" + lines[inspector.nodeSelector.selectedNode+1][1:]
+
+            #Divider
             for l in range(len(lines)):
                 if len(lines[l]) < term.width//2:
                     lines[l] = lines[l].ljust(term.width//2, " ")
                 lines[l] += "│"
+            
             inspector.propertyEditor.properties = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].properties
             inspector.propertyEditor.selectedNode = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode]
             lines[0] += "Inspector".center(term.width//2," ")
@@ -86,7 +93,7 @@ def main():
 
 
             lines.append("Webpage hosted at : 127.0.0.1:8080"+str(file.debug))
-            print(term.home + term.clear,end="",flush=True)
+            #print(term.home + term.clear,end="",flush=True)
             render(lines)
 
 main()

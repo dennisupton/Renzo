@@ -7,7 +7,9 @@ class inspectorPanel:
     def __init__(self):
         self.nodes = []
         self.selectedNode = 0
-
+        self.editing = False
+        self.cursorPos = 0
+    
     def getIndentList(self):
         res = []
         for i in self.nodes:
@@ -15,19 +17,50 @@ class inspectorPanel:
         return res
 
     def up(self):
-        self.selectedNode -= 1
-        if self.selectedNode < 0:
-            self.selectedNode = 0
-    
+        if not self.editing:
+            self.selectedNode -= 1
+            if self.selectedNode < 0:
+                self.selectedNode = 0
+        
     def down(self):
-        self.selectedNode += 1
-        if self.selectedNode > len(self.nodes)-1:
-            self.selectedNode = len(self.nodes)-1
+        if not self.editing:
+            self.selectedNode += 1
+            if self.selectedNode > len(self.nodes)-1:
+                self.selectedNode = len(self.nodes)-1
 
     def enter(self):
-        global panel, propertyEditor
-        panel = propertyEditor
-        propertiesPanel.selectedProperty = 0
+        if not self.editing:
+            global panel, propertyEditor,inner
+            if isinstance(self.nodes[self.selectedNode],inner):
+                self.cursorPos = 0
+                self.editing = True
+            else:
+                panel = propertyEditor
+                propertiesPanel.selectedProperty = 0
+
+    def escape(self):
+        if self.editing:
+            self.editing = False
+    def keyPress(self,keyName,term):
+        if self.editing:
+            if keyName.code == term.KEY_LEFT and self.cursorPos >0:
+                self.cursorPos -= 1
+            elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.getSelectedNode().name):
+                self.cursorPos += 1
+            elif keyName.code == term.KEY_BACKSPACE and self.editing:
+                self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos-1] + self.getSelectedNode().name[self.cursorPos:]
+                self.cursorPos -= 1
+            elif keyName.code == term.KEY_ENTER and self.editing:
+                return
+            elif keyName.code == term.KEY_ESCAPE and self.editing:
+                file.convertToString(inspector.nodeSelector.nodes)
+                self.editing = False
+            elif len(keyName) == 1 and keyName.isprintable():
+                self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
+                self.cursorPos += 1
+    
+    def getSelectedNode(self):
+        return self.nodes[self.selectedNode]
 
     def parse(self,html):
         self.nodes = []
@@ -73,7 +106,8 @@ class propertiesPanel:
     def escape(self):
         global panel, nodeSelector
         panel = nodeSelector
-
+        self.selectedProperty = 0
+    
     def enter(self):
         if self.editing == False:
             self.editing = True

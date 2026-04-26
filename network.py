@@ -7,4 +7,4 @@ app = Flask(__name__)
 async def index():
     return file.currentFile
 
-threading.Thread(target=app.run, kwargs={"port": 8080}, daemon=True).start()
+threading.Thread(target=app.run, kwargs={"port": 8090}, daemon=True).start()
