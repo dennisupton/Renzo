@@ -117,9 +117,9 @@ class inspectorPanel:
                         index +=1
                     else:
                         done = True
-            for i in temp[::-1]:
+            for i in temp:
                 self.nodes.insert(index+self.selectedNode+1,i)
-            self.selectedNode -= 1
+            self.selectedNode = index+self.selectedNode+1
         elif keyName == '\x1b[1;6C':  # ctrl+shift+right
             pass
         elif keyName == '\x1b[1;6D':  # ctrl+shift+left
@@ -171,7 +171,8 @@ class propertiesPanel:
         self.selectedProperty = 0
         self.editing = False
         self.cursorPos = 0
-
+        self.newProp = False
+        self.newPropName = ""
     def escape(self):
         if self.editing:
             file.convertToString(inspector.nodeSelector.nodes)
@@ -200,10 +201,19 @@ class propertiesPanel:
         elif keyName.code == term.KEY_BACKSPACE and self.editing and self.cursorPos >0:
             self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
             self.cursorPos -= 1
-        if len(keyName) == 1 and keyName.isprintable():
-            self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
-            self.cursorPos += 1
-            
+        if len(keyName) == 1 and keyName.isprintable() and self.editing:
+            if self.newProp:
+                self.newPropName = self.newPropName[:self.cursorPos] + keyName + self.newPropName[self.cursorPos:]
+                self.cursorPos += 1
+            else:
+                self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
+                self.cursorPos += 1
+        elif keyName == "x":
+            self.selectedNode.properties.pop(self.getSelectedKey())
+            self.selectedProperty -= 1
+        elif keyName == "n":
+            self.newProp = True
+        
     def up(self):
         self.selectedProperty -= 1
         if self.selectedProperty < 0:
