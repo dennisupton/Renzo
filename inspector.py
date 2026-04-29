@@ -105,19 +105,7 @@ class inspectorPanel:
                 idx -= 1
             self.selectedNode = idx
             file.debug = self.nodes[self.selectedNode].name
-            temp = [self.nodes[self.selectedNode-1]]            temp = [self.nodes[self.selectedNode-1]]
-            self.nodes.pop(self.selectedNode-1)
-            done = False
-            index = 0
-            for i in self.nodes[self.selectedNode-1::]:
-                if not done:
-                    if i.indent > temp[0].indent:
-                        self.nodes.pop(self.selectedNode-1)
-                        temp.append(i)
-                    else:
-                        done = True
-            for i in temp[::-1]:
-                self.nodes.insert(index+self.selectedNode+1,i)
+            temp = [self.nodes[self.selectedNode-1]]
             self.nodes.pop(self.selectedNode-1)
             done = False
             index = 0
