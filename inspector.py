@@ -83,14 +83,58 @@ class inspectorPanel:
         elif keyName == '\x1b[1;5D':  # ctrl+left
             if self.nodes[self.selectedNode].indent>0:
                 self.nodes[self.selectedNode].indent -= 1
- 
-        elif key == '\x1b[1;6B':  # ctrl+shift+down
+        elif keyName == '\x1b[1;6B':  # ctrl+shift+down
+            temp = [self.nodes[self.selectedNode-1]]
+            self.nodes.pop(self.selectedNode-1)
+            done = False
+            index = 0
+            for i in self.nodes[self.selectedNode-1::]:
+                if not done:
+                    if i.indent > temp[0].indent:
+                        self.nodes.pop(self.selectedNode-1)
+                        temp.append(i)
+                        index +=1
+                    else:
+                        done = True
+            for i in temp[::-1]:
+                self.nodes.insert(index+self.selectedNode+1,i)
+            self.selectedNode = index+self.selectedNode+1
+        elif keyName == '\x1b[1;6A':  # ctrl+shift+up
+            idx = self.selectedNode
+            while (not self.nodes[idx].indent <= self.nodes[self.selectedNode-1].indent) and idx >0:
+                idx -= 1
+            self.selectedNode = idx
+            file.debug = self.nodes[self.selectedNode].name
+            temp = [self.nodes[self.selectedNode-1]]            temp = [self.nodes[self.selectedNode-1]]
+            self.nodes.pop(self.selectedNode-1)
+            done = False
+            index = 0
+            for i in self.nodes[self.selectedNode-1::]:
+                if not done:
+                    if i.indent > temp[0].indent:
+                        self.nodes.pop(self.selectedNode-1)
+                        temp.append(i)
+                    else:
+                        done = True
+            for i in temp[::-1]:
+                self.nodes.insert(index+self.selectedNode+1,i)
+            self.nodes.pop(self.selectedNode-1)
+            done = False
+            index = 0
+            for i in self.nodes[self.selectedNode-1::]:
+                if not done:
+                    if i.indent > temp[0].indent:
+                        self.nodes.pop(self.selectedNode-1)
+                        temp.append(i)
+                        index +=1
+                    else:
+                        done = True
+            for i in temp[::-1]:
+                self.nodes.insert(index+self.selectedNode+1,i)
+            self.selectedNode -= 1
+        elif keyName == '\x1b[1;6C':  # ctrl+shift+right
             pass
-        elif key == '\x1b[1;6A':  # ctrl+shift+up
-            pass
-        elif key == '\x1b[1;6C':  # ctrl+shift+right
-            pass
-        elif key == '\x1b[1;6D':  # ctrl+shift+left
+        elif keyName == '\x1b[1;6D':  # ctrl+shift+left
             pass
 
         file.convertToString(self.nodes)
