@@ -17,6 +17,8 @@ currentFile='''
 
 debug = ""
 
+def load()
+
 def propertiesToString(properties):
     res = ""
     for key,value in properties.items():

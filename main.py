@@ -54,7 +54,7 @@ def main():
                     inspector.panel.keyPress(key,term)
                 except Exception as e:
                     file.debug = "error happened" + str(e)
-            lines = [" "]*(term.height-2)
+            lines = [" "]*(term.height-3)
             if inspector.panel == inspector.nodeSelector:
                 lines[0] = "Nodes".center(term.width//2,"─")
 
@@ -98,7 +98,7 @@ def main():
                         lines[idx+1] += ">"
                     else:
                         lines[idx+1] += " "
-                    if key == inspector.propertyEditor.getSelectedKey() and inspector.propertyEditor.editing:
+                    if key == inspector.propertyEditor.getSelectedKey() and inspector.propertyEditor.editing and not inspector.propertyEditor.newProp:
                         text = inspector.propertyEditor.properties[key]
                         lines[idx+1] += key + " : " + text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]
                     else:
@@ -111,9 +111,12 @@ def main():
                                 lines[idx+1] += key + " : " + "○"
 
                     idx += 1
-                
-
-            lines[-1] = "Arrow keys to navigate | Enter to Edit | Press Esc to go back"
+                if inspector.propertyEditor.newProp:
+                    lines[idx+1] += "New Property Name : "
+                    text = inspector.propertyEditor.newPropName
+                    lines[idx+2] += text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]                
+            lines[0]
+            lines[-1] = "Arrow keys to navigate | Enter to Edit | Press Esc to go back | ctrl + arrow keys to move tags around"
             url = "127.0.0.1:5090"
             lines.append("Webpage hosted at : "+hyperlink(url,url)+" "+str(file.debug))
             print(term.home + term.clear,end="",flush=True)

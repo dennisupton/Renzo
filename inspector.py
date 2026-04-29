@@ -190,17 +190,24 @@ class propertiesPanel:
             elif type(self.properties[self.getSelectedKey()]) == bool:
                 self.properties[self.getSelectedKey()] = not self.properties[self.getSelectedKey()]
         else:
-            file.convertToString(inspector.nodeSelector.nodes)
+            if self.newProp:
+                self.newProp = False
+                self.selectedNode.properties[self.newPropName] = ""
+            else:
+                file.convertToString(inspector.nodeSelector.nodes)
             self.editing = False
     def keyPress(self,keyName,term):
-
         if keyName.code == term.KEY_LEFT and self.cursorPos >0:
             self.cursorPos -= 1
-        elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.properties[self.getSelectedKey()]):
+        elif keyName.code == term.KEY_RIGHT and self.editing and ((self.newProp and  self.cursorPos < len(self.newPropName)) or (not self.newProp and  self.cursorPos < len(self.properties[self.getSelectedKey()]))):
             self.cursorPos += 1
         elif keyName.code == term.KEY_BACKSPACE and self.editing and self.cursorPos >0:
-            self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
-            self.cursorPos -= 1
+            if self.newProp:
+                self.newPropName = self.newPropName[:self.cursorPos-1] + self.newPropName[self.cursorPos:]
+                self.cursorPos -=  1
+            else:
+                self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
+                self.cursorPos -= 1
         if len(keyName) == 1 and keyName.isprintable() and self.editing:
             if self.newProp:
                 self.newPropName = self.newPropName[:self.cursorPos] + keyName + self.newPropName[self.cursorPos:]
@@ -213,7 +220,9 @@ class propertiesPanel:
             self.selectedProperty -= 1
         elif keyName == "n":
             self.newProp = True
-        
+            self.newPropName = ""
+            self.editing = True
+            self.cursorPos = 0
     def up(self):
         self.selectedProperty -= 1
         if self.selectedProperty < 0:
