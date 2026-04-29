@@ -80,10 +80,19 @@ class inspectorPanel:
             global nodes
             if (type(self.nodes[self.selectedNode-1]) == node and self.nodes[self.selectedNode].indent <= self.nodes[self.selectedNode-1].indent) or self.nodes[self.selectedNode].indent < self.nodes[self.selectedNode-1].indent:
                 self.nodes[self.selectedNode].indent += 1
-
         elif keyName == '\x1b[1;5D':  # ctrl+left
             if self.nodes[self.selectedNode].indent>0:
                 self.nodes[self.selectedNode].indent -= 1
+ 
+        elif key == '\x1b[1;6B':  # ctrl+shift+down
+            pass
+        elif key == '\x1b[1;6A':  # ctrl+shift+up
+            pass
+        elif key == '\x1b[1;6C':  # ctrl+shift+right
+            pass
+        elif key == '\x1b[1;6D':  # ctrl+shift+left
+            pass
+
         file.convertToString(self.nodes)
 
     def getSelectedNode(self):
