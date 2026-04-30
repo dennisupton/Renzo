@@ -4,186 +4,44 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-                                    Renzo — terminal HTML editor                
+            Renzo Project
         </title>
     </head>
     <body>
-        <div class="wrap">
-            <h1>
-                                                &lt;Renzo&gt;                        
-            </h1>
-            <p style="font-size: 1rem; color: #aaa; margin-top: -0.2rem;">
-                                                terminal-based HTML editor — no mouse, no bloat                        
-            </p>
-            <div class="cmd">
-                                                    $ python main.py index.html                          
-            </div>
-            <br>            </br>
-            <div>
-                                                        Yes this website was actually writen in renzo lol                        
-            </div>
-            <h2>
-                                                Features                        
-            </h2>
-            <ul class="feature-list">
-                <li>
-                    <strong>
-                                                                        Node tree view                                        
-                    </strong>
-                </li>
-                <li>
-                    <strong>
-                                                                        Property inspector                                        
-                    </strong>
-                </li>
-                <li>
-                    <strong>
-                                                                        Tag search                                        
-                    </strong>
-                </li>
-                <li>
-                    <strong>
-                                                                        Live browser preview                                        
-                    </strong>
-                    <code>
-                                                                        127.0.0.1:5090                                        
-                    </code>
-                </li>
-                <li>
-                    <strong>
-                                                                        Save to file or clipboard                                        
-                    </strong>
-                    <code>
-                                                                        Ctrl+S                                        
-                    </code>
-                </li>
-                <li>
-                    <strong>
-                                                                        100% keyboard driven                                        
-                    </strong>
-                </li>
-            </ul>
-            <h2>
-                                                Install                        
-            </h2>
-            <p>
-                                                Requires                                 
-                <strong>
-                                                            Python 3.8+                                
-                </strong>
-            </p>
-            <pre>
-                <code>
-                                                            pip install blessed flask pyperclip                                
-                </code>
-            </pre>
-            <p>
-                                                Run on any HTML file or start from scratch:                        
-            </p>
-            <pre>
-                <code>
-                                                            python main.py index.html    # load existing filepython main.py                # blank project (clipboard save)                                
-                </code>
-            </pre>
+        <h1>
+            Renzo
+        </h1>
+        <h3>
+            the terminal based html editor
+        </h3>
+        <h2>
+            Features:
+        </h2>
+        <ul>
+            <li>
+                Node tree for html tags
+            </li>
+            <li>
+                Property Inspector
+            </li>
+            <li>
+                File reading and saving
+            </li>
+            <li>
+                works 100% on keyboard shortcuts
+            </li>
+        </ul>
+        <h2>
+            Install
+        </h2>
+        <div>
+            To create a new file run python main.py
         </div>
+        <div>
+            To edit an existing one run python main.py file.html
+        </div>
+        <h2>
+            uhhh idk what else to talk about on this demo site but i promise renzo can do so much more
+        </h2>
     </body>
 </html>
-<h2>
-        Workflow example
-</h2>
-<p>
-        Build a button with one class — live preview, no browser refresh.
-</p>
-<ol class="steps">
-    <li>
-                Select         
-        <code>
-                        &lt;body&gt;        
-        </code>
-    </li>
-    <li>
-                Press         
-        <span>
-                        n        
-        </span>
-        <code>
-                        button        
-        </code>
-        <span>
-                        Enter        
-        </span>
-    </li>
-    <li>
-                Press         
-        <span>
-                        Enter        
-        </span>
-    </li>
-    <li>
-                Press         
-        <span>
-                        n        
-        </span>
-        <code>
-                        class="btn"        
-        </code>
-        <span>
-                        Enter        
-        </span>
-    </li>
-    <li>
-                Press         
-        <span>
-                        Esc        
-        </span>
-        <span>
-                        i        
-        </span>
-        <code>
-                        Click me        
-        </code>
-        <span>
-                        Enter        
-        </span>
-    </li>
-    <li>
-                See changes live at         
-        <code>
-                        127.0.0.1:5090        
-        </code>
-    </li>
-    <li>
-                Press         
-        <span>
-                        Ctrl        
-        </span>
-        <span>
-                        S        
-        </span>
-    </li>
-</ol>
-<h2>
-        How it works
-</h2>
-<p>
-        Renzo parses HTML into a flat list of nodes + text objects, each with an     
-    <code>
-                indent    
-    </code>
-    <code>
-                convertToString()    
-    </code>
-    <code>
-                network.py    
-    </code>
-</p>
-<hr>
-    <footer>
-        <span>
-                        &lt;Renzo&gt;        
-        </span>
-        <br>
-                            MIT          
-        </br>
-    </footer>
-</hr>
