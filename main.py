@@ -32,8 +32,8 @@ def hyperlink(url, text):
     #    return f"\033]8;;{url}\033\\{text}\033]8;;\033\\"
     return f"\x1b]8;;{url}\x1b\\\x1b[4m{text}\x1b[0m\x1b]8;;\x1b\\"
 
-inspector.nodeSelector.parse(file.getRaw())
-indents = inspector.nodeSelector.getIndentList()
+inspector.tagSelector.parse(file.getRaw())
+indents = inspector.tagSelector.getIndentList()
 def main():
     with term.fullscreen(), term.cbreak():
         sys.stdout.write("\033[?25l")
@@ -56,21 +56,21 @@ def main():
                 except Exception as e:
                     file.debug = "error happened : " + str(e)
             lines = [" "]*(term.height-3)
-            if inspector.panel == inspector.nodeSelector:
-                lines[0] = "Nodes".center(term.width//2,"─")
+            if inspector.panel == inspector.tagSelector:
+                lines[0] = "Tags".center(term.width//2,"─")
 
-            for i in range(len(inspector.nodeSelector.nodes)):
-                text = inspector.nodeSelector.nodes[i].name 
-                if inspector.nodeSelector.editing and i == inspector.nodeSelector.selectedNode:
-                    text = text[:inspector.nodeSelector.cursorPos] + "|" + text[inspector.nodeSelector.cursorPos:]
-                if isinstance(inspector.nodeSelector.nodes[i],inspector.inner):
+            for i in range(len(inspector.tagSelector.tags)):
+                text = inspector.tagSelector.tags[i].name 
+                if inspector.tagSelector.editing and i == inspector.tagSelector.selectedtag:
+                    text = text[:inspector.tagSelector.cursorPos] + "|" + text[inspector.tagSelector.cursorPos:]
+                if isinstance(inspector.tagSelector.tags[i],inspector.inner):
                     text = '"'+text+'"'  
-                if len(inspector.nodeSelector.nodes) >= i+2 and checkExtendedIndent(indents,i):
-                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"├─"+text
+                if len(inspector.tagSelector.tags) >= i+2 and checkExtendedIndent(indents,i):
+                    lines[i+1] = " "+(inspector.tagSelector.tags[i].indent)*"│ "+"├─"+text
                 else:
-                    lines[i+1] = " "+(inspector.nodeSelector.nodes[i].indent)*"│ "+"└─"+text
+                    lines[i+1] = " "+(inspector.tagSelector.tags[i].indent)*"│ "+"└─"+text
 
-            lines[inspector.nodeSelector.selectedNode+1] = ">" + lines[inspector.nodeSelector.selectedNode+1][1:]
+            lines[inspector.tagSelector.selectedtag+1] = ">" + lines[inspector.tagSelector.selectedtag+1][1:]
 
             #Divider
             for l in range(len(lines)):
@@ -87,8 +87,8 @@ def main():
                         else:
                             lines[i] += limitLineLength("  "+inspector.panel.results[i-2]["tag"]+" - "+inspector.panel.results[i-2]["description"],term.width//2)
             else:
-                inspector.propertyEditor.properties = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].properties
-                inspector.propertyEditor.selectedNode = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode]
+                inspector.propertyEditor.properties = inspector.tagSelector.tags[inspector.tagSelector.selectedtag].properties
+                inspector.propertyEditor.selectedtag = inspector.tagSelector.tags[inspector.tagSelector.selectedtag]
                 if inspector.panel is inspector.propertyEditor:
                     lines[0] += "Inspector".center(term.width//2,"─")
                 else:

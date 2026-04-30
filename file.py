@@ -1,21 +1,15 @@
 import inspector
 import pyperclip
 
+# Load file from argument or fall back to a default
+if len(sys.argv) > 1:
+    filepath = sys.argv[1]
+    with open(filepath, "r") as f:
+        currentFile = f.read()
+else:
+    filepath = None
+    currentFile = "<!DOCTYPE html><html><head></head><body></body></html>"
 
-currentFile='''
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>hello!</h1>
-    <div><div>hello</div></div>
-</body>
-</html>
-'''
 
 debug = ""
 
@@ -32,35 +26,35 @@ def propertiesToString(properties):
         elif type(value) == bool and value:
             res += " "+key
     return res
-def convertToString(nodes):
+def convertToString(tags):
     global currentFile
     res = ""
-    lastNode = None
-    nodeStack = []
-    for i in nodes:
-        if lastNode and i.indent <= lastNode.indent:
+    lasttag = None
+    tagStack = []
+    for i in tags:
+        if lasttag and i.indent <= lasttag.indent:
             skipped = 0
-            if hasEnd(lastNode.name) and not isinstance(lastNode, inspector.inner):
-                res += "    "*lastNode.indent+"</"+lastNode.name+">"
+            if hasEnd(lasttag.name) and not isinstance(lasttag, inspector.inner):
+                res += "    "*lasttag.indent+"</"+lasttag.name+">"
                 res += "\n"
-                nodeStack.remove(lastNode)
+                tagStack.remove(lasttag)
 
-            for indent in range(lastNode.indent-i.indent):
-                if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
-                    res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+            for indent in range(lasttag.indent-i.indent):
+                if hasEnd(tagStack[-1].name) and not isinstance(tagStack[-1], inspector.inner):
+                    res += "    "*tagStack[-1].indent+"</"+tagStack[-1].name+">"
                     res += "\n"
-                if isinstance(nodeStack[-1], inspector.inner) or not hasEnd(nodeStack[-1].name):
+                if isinstance(tagStack[-1], inspector.inner) or not hasEnd(tagStack[-1].name):
                     skipped += 1
-                nodeStack.pop(-1)
-            while skipped > 0 and len(nodeStack)>0:
-                if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
-                    res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+                tagStack.pop(-1)
+            while skipped > 0 and len(tagStack)>0:
+                if hasEnd(tagStack[-1].name) and not isinstance(tagStack[-1], inspector.inner):
+                    res += "    "*tagStack[-1].indent+"</"+tagStack[-1].name+">"
                     res += "\n"
-                if isinstance(nodeStack[-1], inspector.inner) or not hasEnd(nodeStack[-1].name):
+                if isinstance(tagStack[-1], inspector.inner) or not hasEnd(tagStack[-1].name):
                     skipped += 1
-                nodeStack.pop(-1)
+                tagStack.pop(-1)
                 skipped -= 1
-        elif lastNode and i.indent > lastNode.indent:
+        elif lasttag and i.indent > lasttag.indent:
             res += "\n"
 
 
@@ -73,29 +67,29 @@ def convertToString(nodes):
         if not hasEnd(i.name):
             res += "\n"
         
-        nodeStack.append(i)
-        lastNode = i
+        tagStack.append(i)
+        lasttag = i
     skipped = 0
-    while len(nodeStack)>0:
-        if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
-            res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+    while len(tagStack)>0:
+        if hasEnd(tagStack[-1].name) and not isinstance(tagStack[-1], inspector.inner):
+            res += "    "*tagStack[-1].indent+"</"+tagStack[-1].name+">"
             res += "\n"
-        if isinstance(nodeStack[-1], inspector.inner):
+        if isinstance(tagStack[-1], inspector.inner):
             skipped += 1
-        nodeStack.pop(-1)
-    while skipped > 0 and len(nodeStack)>0:
-        if hasEnd(nodeStack[-1].name) and not isinstance(nodeStack[-1], inspector.inner):
-            res += "    "*nodeStack[-1].indent+"</"+nodeStack[-1].name+">"
+        tagStack.pop(-1)
+    while skipped > 0 and len(tagStack)>0:
+        if hasEnd(tagStack[-1].name) and not isinstance(tagStack[-1], inspector.inner):
+            res += "    "*tagStack[-1].indent+"</"+tagStack[-1].name+">"
             res += "\n"
-        if isinstance(nodeStack[-1], inspector.inner) or not hasEnd(nodeStack[-1].name):
+        if isinstance(tagStack[-1], inspector.inner) or not hasEnd(tagStack[-1].name):
             skipped += 1
-        nodeStack.pop(-1)
+        tagStack.pop(-1)
         skipped -= 1
 
     currentFile = res
 
-def hasEnd(node):
-    if node.startswith("!DOCTYPE") or node.startswith("meta"):
+def hasEnd(tag):
+    if tag.startswith("!DOCTYPE") or tag.startswith("meta"):
         return False
     return True
 

@@ -23,14 +23,14 @@ class searchPanel:
             self.selection = len(self.results)-1
 
     def enter(self):
-        inspector.panel = inspector.nodeSelector
-        indent = inspector.nodeSelector.nodes[inspector.nodeSelector.selectedNode].indent + 1
-        inspector.nodeSelector.nodes.insert(inspector.nodeSelector.selectedNode+1,inspector.node(self.results[self.selection]["tag"],indent))
-        file.convertToString(inspector.nodeSelector.nodes)
+        inspector.panel = inspector.tagSelector
+        indent = inspector.tagSelector.tags[inspector.tagSelector.selectedtag].indent + 1
+        inspector.tagSelector.tags.insert(inspector.tagSelector.selectedtag+1,inspector.tag(self.results[self.selection]["tag"],indent))
+        file.convertToString(inspector.tagSelector.tags)
 
 
     def escape(self):
-        inspector.panel = inspector.nodeSelector
+        inspector.panel = inspector.tagSelector
         
     def keyPress(self,keyName,term):
         if keyName.code == term.KEY_LEFT and self.cursorPos >0:
@@ -52,4 +52,4 @@ class searchPanel:
                 res.append(i)
         self.results = res
 
-nodeSearch = searchPanel()
+tagSearch = searchPanel()

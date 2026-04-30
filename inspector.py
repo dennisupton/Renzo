@@ -5,169 +5,169 @@ import tagSearch
 
 class inspectorPanel:
     def __init__(self):
-        self.nodes = []
-        self.selectedNode = 0
+        self.tags = []
+        self.selectedtag = 0
         self.editing = False
         self.cursorPos = 0
     
     def getIndentList(self):
         res = []
-        for i in self.nodes:
+        for i in self.tags:
             res.append(i.indent)
         return res
 
     def up(self):
         if not self.editing:
-            self.selectedNode -= 1
-            if self.selectedNode < 0:
-                self.selectedNode = 0
+            self.selectedtag -= 1
+            if self.selectedtag < 0:
+                self.selectedtag = 0
         
     def down(self):
         if not self.editing:
-            self.selectedNode += 1
-            if self.selectedNode > len(self.nodes)-1:
-                self.selectedNode = len(self.nodes)-1
+            self.selectedtag += 1
+            if self.selectedtag > len(self.tags)-1:
+                self.selectedtag = len(self.tags)-1
 
     def enter(self):
         if not self.editing:
             global panel, propertyEditor,inner
-            if isinstance(self.nodes[self.selectedNode],inner):
+            if isinstance(self.tags[self.selectedtag],inner):
                 self.cursorPos = 0
                 self.editing = True
             else:
                 panel = propertyEditor
                 propertiesPanel.selectedProperty = 0
         else:
-            file.convertToString(nodeSelector.nodes)
+            file.convertToString(tagSelector.tags)
             self.editing = False
 
     def escape(self):
         if self.editing:
-            file.convertToString(nodeSelector.nodes)
+            file.convertToString(tagSelector.tags)
             self.editing = False
     def keyPress(self,keyName,term):
         if self.editing:
             if keyName.code == term.KEY_LEFT and self.cursorPos >0:
                 self.cursorPos -= 1
-            elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.getSelectedNode().name):
+            elif keyName.code == term.KEY_RIGHT and self.cursorPos < len(self.getSelectedtag().name):
                 self.cursorPos += 1
             elif keyName.code == term.KEY_BACKSPACE and self.editing and self.cursorPos > 0:
-                self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos-1] + self.getSelectedNode().name[self.cursorPos:]
+                self.tags[self.selectedtag].name = self.getSelectedtag().name[:self.cursorPos-1] + self.getSelectedtag().name[self.cursorPos:]
                 self.cursorPos -= 1
             elif len(keyName) == 1 and keyName.isprintable():
-                self.nodes[self.selectedNode].name = self.getSelectedNode().name[:self.cursorPos] + keyName + self.getSelectedNode().name[self.cursorPos:]
+                self.tags[self.selectedtag].name = self.getSelectedtag().name[:self.cursorPos] + keyName + self.getSelectedtag().name[self.cursorPos:]
                 self.cursorPos += 1
         elif keyName == "n":
             global panel
-            panel = tagSearch.nodeSearch
+            panel = tagSearch.tagSearch
         elif keyName == "i":
-            self.nodes.insert(self.selectedNode+1,inner("",self.nodes[self.selectedNode].indent))
-            self.selectedNode += 1
+            self.tags.insert(self.selectedtag+1,inner("",self.tags[self.selectedtag].indent))
+            self.selectedtag += 1
             self.cursorPos = 0
             self.editing = True
         elif keyName == "x":
-            self.nodes.pop(self.selectedNode)
+            self.tags.pop(self.selectedtag)
         elif keyName == '\x1b[1;5B':  # ctrl+down
-            temp = self.nodes[self.selectedNode-1]
-            self.nodes.pop(self.selectedNode-1)
-            self.nodes.insert(self.selectedNode,temp)
+            temp = self.tags[self.selectedtag-1]
+            self.tags.pop(self.selectedtag-1)
+            self.tags.insert(self.selectedtag,temp)
 
         elif keyName == '\x1b[1;5A':  # ctrl+up
-            temp = self.nodes[self.selectedNode+1]
-            self.nodes.pop(self.selectedNode+1)
-            self.nodes.insert(self.selectedNode,temp)
+            temp = self.tags[self.selectedtag+1]
+            self.tags.pop(self.selectedtag+1)
+            self.tags.insert(self.selectedtag,temp)
         elif keyName == '\x1b[1;5C':  # ctrl+right
-            global nodes
-            if (type(self.nodes[self.selectedNode-1]) == node and self.nodes[self.selectedNode].indent <= self.nodes[self.selectedNode-1].indent) or self.nodes[self.selectedNode].indent < self.nodes[self.selectedNode-1].indent:
-                self.nodes[self.selectedNode].indent += 1
+            global tags
+            if (type(self.tags[self.selectedtag-1]) == tag and self.tags[self.selectedtag].indent <= self.tags[self.selectedtag-1].indent) or self.tags[self.selectedtag].indent < self.tags[self.selectedtag-1].indent:
+                self.tags[self.selectedtag].indent += 1
         elif keyName == '\x1b[1;5D':  # ctrl+left
-            if self.nodes[self.selectedNode].indent>0:
-                self.nodes[self.selectedNode].indent -= 1
+            if self.tags[self.selectedtag].indent>0:
+                self.tags[self.selectedtag].indent -= 1
         elif keyName == '\x1b[1;6B':  # ctrl+shift+down
-            temp = [self.nodes[self.selectedNode-1]]
-            self.nodes.pop(self.selectedNode-1)
+            temp = [self.tags[self.selectedtag-1]]
+            self.tags.pop(self.selectedtag-1)
             done = False
             index = 0
-            for i in self.nodes[self.selectedNode-1::]:
+            for i in self.tags[self.selectedtag-1::]:
                 if not done:
                     if i.indent > temp[0].indent:
-                        self.nodes.pop(self.selectedNode-1)
+                        self.tags.pop(self.selectedtag-1)
                         temp.append(i)
                         index +=1
                     else:
                         done = True
             for i in temp[::-1]:
-                self.nodes.insert(index+self.selectedNode+1,i)
-            self.selectedNode = index+self.selectedNode+1
+                self.tags.insert(index+self.selectedtag+1,i)
+            self.selectedtag = index+self.selectedtag+1
         elif keyName == '\x1b[1;6A':  # ctrl+shift+up
-            idx = self.selectedNode
-            while (not self.nodes[idx].indent <= self.nodes[self.selectedNode-1].indent) and idx >0:
+            idx = self.selectedtag
+            while (not self.tags[idx].indent <= self.tags[self.selectedtag-1].indent) and idx >0:
                 idx -= 1
-            self.selectedNode = idx
-            file.debug = self.nodes[self.selectedNode].name
-            temp = [self.nodes[self.selectedNode-1]]
-            self.nodes.pop(self.selectedNode-1)
+            self.selectedtag = idx
+            file.debug = self.tags[self.selectedtag].name
+            temp = [self.tags[self.selectedtag-1]]
+            self.tags.pop(self.selectedtag-1)
             done = False
             index = 0
-            for i in self.nodes[self.selectedNode-1::]:
+            for i in self.tags[self.selectedtag-1::]:
                 if not done:
                     if i.indent > temp[0].indent:
-                        self.nodes.pop(self.selectedNode-1)
+                        self.tags.pop(self.selectedtag-1)
                         temp.append(i)
                         index +=1
                     else:
                         done = True
             for i in temp:
-                self.nodes.insert(index+self.selectedNode+1,i)
-            self.selectedNode = index+self.selectedNode+1
+                self.tags.insert(index+self.selectedtag+1,i)
+            self.selectedtag = index+self.selectedtag+1
         elif keyName == '\x1b[1;6C':  # ctrl+shift+right
             pass
         elif keyName == '\x1b[1;6D':  # ctrl+shift+left
             pass
 
-        file.convertToString(self.nodes)
+        file.convertToString(self.tags)
 
-    def getSelectedNode(self):
-        return self.nodes[self.selectedNode]
+    def getSelectedtag(self):
+        return self.tags[self.selectedtag]
 
     def parse(self,html):
-        self.nodes = []
+        self.tags = []
         indent = 0
-        newNodeName = False
-        nodeName = ""
-        nodeProperties = ""
+        newtagName = False
+        tagName = ""
+        tagProperties = ""
         innerText = ""
-        inNode = False
+        intag = False
         global inner
         for i in html:
-            if newNodeName and i == "/":
-                newNodeName = False
+            if newtagName and i == "/":
+                newtagName = False
                 indent -= 1
             elif i =="/":
                 indent -= 1
-            elif newNodeName and i == ">":
-                inNode = False
-                self.nodes.append(node(nodeName, indent))
-                if file.hasEnd(nodeName):
+            elif newtagName and i == ">":
+                intag = False
+                self.tags.append(tag(tagName, indent))
+                if file.hasEnd(tagName):
                     indent += 1
-                nodeName = ""
-                newNodeName = False
-            elif newNodeName:
-                nodeName += i
+                tagName = ""
+                newtagName = False
+            elif newtagName:
+                tagName += i
             elif i == "<":
-                if len(innerText.strip(" "))>0 and not inNode:
-                    self.nodes.append(inner(innerText,indent))
+                if len(innerText.strip(" "))>0 and not intag:
+                    self.tags.append(inner(innerText,indent))
                 innerText = ""
                 
-                inNode = True
-                newNodeName = True
+                intag = True
+                newtagName = True
             else:
                 innerText += i
 
 class propertiesPanel:
     def __init__(self):
         self.properties = {}
-        self.selectedNode = None
+        self.selectedtag = None
         self.selectedProperty = 0
         self.editing = False
         self.cursorPos = 0
@@ -175,11 +175,11 @@ class propertiesPanel:
         self.newPropName = ""
     def escape(self):
         if self.editing:
-            file.convertToString(inspector.nodeSelector.nodes)
+            file.convertToString(inspector.tagSelector.tags)
             self.editing = False
         else:
-            global panel, nodeSelector
-            panel = nodeSelector
+            global panel, tagSelector
+            panel = tagSelector
             self.selectedProperty = 0
 
     def enter(self):
@@ -192,9 +192,9 @@ class propertiesPanel:
         else:
             if self.newProp:
                 self.newProp = False
-                self.selectedNode.properties[self.newPropName] = ""
+                self.selectedtag.properties[self.newPropName] = ""
             else:
-                file.convertToString(inspector.nodeSelector.nodes)
+                file.convertToString(inspector.tagSelector.tags)
             self.editing = False
     def keyPress(self,keyName,term):
         if keyName.code == term.KEY_LEFT and self.cursorPos >0:
@@ -206,17 +206,17 @@ class propertiesPanel:
                 self.newPropName = self.newPropName[:self.cursorPos-1] + self.newPropName[self.cursorPos:]
                 self.cursorPos -=  1
             else:
-                self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
+                self.selectedtag.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos-1] + self.properties[self.getSelectedKey()][self.cursorPos:]
                 self.cursorPos -= 1
         if len(keyName) == 1 and keyName.isprintable() and self.editing:
             if self.newProp:
                 self.newPropName = self.newPropName[:self.cursorPos] + keyName + self.newPropName[self.cursorPos:]
                 self.cursorPos += 1
             else:
-                self.selectedNode.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
+                self.selectedtag.properties[self.getSelectedKey()] = self.properties[self.getSelectedKey()][:self.cursorPos] + keyName + self.properties[self.getSelectedKey()][self.cursorPos:]
                 self.cursorPos += 1
         elif keyName == "x":
-            self.selectedNode.properties.pop(self.getSelectedKey())
+            self.selectedtag.properties.pop(self.getSelectedKey())
             self.selectedProperty -= 1
         elif keyName == "n":
             self.newProp = True
@@ -237,7 +237,7 @@ class propertiesPanel:
     def getSelectedKey(self):
         return str(list(self.properties)[self.selectedProperty])
 
-class node:
+class tag:
     def __init__(self, name, indent):
         self.name = name.split(" ", -1)[0]
         self.indent = indent
@@ -256,6 +256,6 @@ class inner:
         self.properties = {}
 
 
-nodeSelector = inspectorPanel()
+tagSelector = inspectorPanel()
 propertyEditor = propertiesPanel()
-panel = nodeSelector
+panel = tagSelector
