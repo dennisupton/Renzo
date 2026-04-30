@@ -50,7 +50,8 @@ def main():
                         inspector.panel.enter()
                     if key.code == term.KEY_ESCAPE:
                         inspector.panel.escape()
-
+                    if key == "\x13":
+                        file.save()
                     inspector.panel.keyPress(key,term)
                 except Exception as e:
                     file.debug = "error happened : " + str(e)

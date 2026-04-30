@@ -20,7 +20,9 @@ currentFile='''
 debug = ""
 
 def save():
-    pyperclip.copy("currentFile")
+    global debug
+    pyperclip.copy(currentFile)
+    debug = "Saved to clipboard"
 
 def propertiesToString(properties):
     res = ""
