@@ -9,6 +9,8 @@ class inspectorPanel:
         self.selectedtag = 0
         self.editing = False
         self.cursorPos = 0
+        self.offset = 0
+        
     
     def getIndentList(self):
         res = []
@@ -21,12 +23,14 @@ class inspectorPanel:
             self.selectedtag -= 1
             if self.selectedtag < 0:
                 self.selectedtag = 0
+            if self.selectedtag < self.offset:
+                self.offset -= 1
         
     def down(self):
-        if not self.editing:
+        if not self.editing and self.selectedtag < len(self.tags)-1:
+            if not self.selectedtag <= self.maxHeight+self.offset:
+                self.offset += 1
             self.selectedtag += 1
-            if self.selectedtag > len(self.tags)-1:
-                self.selectedtag = len(self.tags)-1
 
     def enter(self):
         if not self.editing:
@@ -124,13 +128,13 @@ class inspectorPanel:
             pass
         elif keyName == '\x1b[1;6D':  # ctrl+shift+left
             pass
-
         file.convertToString(self.tags)
 
     def getSelectedtag(self):
         return self.tags[self.selectedtag]
 
     def parse(self,html):
+        html.replace("\n","")
         self.tags = []
         indent = 0
         newtagName = False
@@ -242,7 +246,6 @@ class tag:
         self.name = name.split(" ", -1)[0]
         self.indent = indent
         self.parseProperties(" ".join(name.split(" ", -1)[1:]))
-    
     
 
     def parseProperties(self,raw):

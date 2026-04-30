@@ -1,558 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Renzo — CLI HTML Editor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Modak&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #1a1a1a;
-      --surface: #242424;
-      --surface2: #2e2e2e;
-      --border: #3a3a3a;
-      --text: #e8e4dc;
-      --muted: #888;
-      --accent: #b5b5b5;
-      --tag: #d4d4d4;
-      --green: #7ec8a0;
-      --amber: #e8c97a;
-      --red: #e8836a;
-      --blue: #7ab8e8;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Space Mono', monospace;
-      font-size: 14px;
-      line-height: 1.7;
-      min-height: 100vh;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 24px 60px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(180,180,180,0.07) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .logo-text {
-      font-family: 'Modak', cursive;
-      font-size: clamp(72px, 14vw, 140px);
-      color: var(--tag);
-      letter-spacing: -2px;
-      line-height: 1;
-      text-shadow:
-        4px 4px 0 #111,
-        8px 8px 0 rgba(0,0,0,0.3);
-      animation: drop-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    .logo-text .chevron {
-      color: var(--muted);
-    }
-
-    @keyframes drop-in {
-      from { opacity: 0; transform: translateY(-30px) scale(0.95); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .tagline {
-      margin-top: 20px;
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(13px, 2vw, 16px);
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      animation: fade-up 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    .install-box {
-      margin-top: 36px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 28px;
-      font-size: 15px;
-      color: var(--green);
-      letter-spacing: 0.04em;
-      animation: fade-up 0.7s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-      position: relative;
-    }
-
-    .install-box::before {
-      content: '$';
-      color: var(--muted);
-      margin-right: 10px;
-    }
-
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 24px 100px;
-    }
-
-    .section {
-      margin-top: 64px;
-    }
-
-    .section-title {
-      font-family: 'Modak', cursive;
-      font-size: clamp(28px, 5vw, 42px);
-      color: var(--tag);
-      letter-spacing: 0.5px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-title .num {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 2px 7px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 700;
-      align-self: center;
-      margin-top: 4px;
-    }
-
-    p {
-      color: #bbb;
-      margin-bottom: 14px;
-    }
-
-    /* ── FEATURE CHIPS ── */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 14px;
-      margin-top: 8px;
-    }
-
-    .feature-card {
-      background: var(--surface);
-      border-radius: 10px;
-      padding: 18px 20px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-
-    .feature-card .icon {
-      font-size: 22px;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .feature-card .label {
-      font-weight: 700;
-      color: var(--text);
-      font-size: 13px;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .feature-card .desc {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    pre, code {
-      font-family: 'Space Mono', monospace;
-    }
-
-    pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 22px;
-      overflow-x: auto;
-      font-size: 13px;
-      line-height: 1.8;
-      color: #ccc;
-      margin: 16px 0;
-    }
-
-    code {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1px 6px;
-      font-size: 12px;
-      color: var(--amber);
-    }
-
-    pre code {
-      background: none;
-      border: none;
-      padding: 0;
-      color: inherit;
-    }
-
-    .comment { color: #555; font-style: italic; }
-    .kw      { color: var(--blue); }
-    .str     { color: var(--green); }
-    .fn      { color: var(--amber); }
-
-    /* ── KEYBIND TABLES ── */
-    .kb-section {
-      margin-top: 24px;
-    }
-
-    .kb-section h3 {
-      font-family: 'Modak', cursive;
-      font-size: 20px;
-      color: var(--accent);
-      margin-bottom: 12px;
-      letter-spacing: 0.5px;
-    }
-
-    .kb-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 28px;
-    }
-
-    .kb-table th {
-      text-align: left;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      padding: 8px 14px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .kb-table td {
-      padding: 9px 14px;
-      border-bottom: 1px solid #2a2a2a;
-      color: #bbb;
-      font-size: 13px;
-      vertical-align: top;
-    }
-
-    .kb-table tr:last-child td { border-bottom: none; }
-
-    .kb-table tr:hover td { background: var(--surface2); }
-
-    .key {
-      display: inline-block;
-      background: var(--surface2);
-      border: 1px solid #444;
-      border-bottom: 3px solid #444;
-      border-radius: 5px;
-      padding: 1px 8px;
-      font-size: 11px;
-      color: var(--text);
-      white-space: nowrap;
-    }
-
-    /* ── LAYOUT DIAGRAM ── */
-    .diagram {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 22px;
-      overflow-x: auto;
-      font-size: 12.5px;
-      line-height: 1.7;
-      color: #aaa;
-      margin: 16px 0;
-    }
-
-    .diagram .dim  { color: #555; }
-    .diagram .hi   { color: var(--tag); font-weight: 700; }
-    .diagram .sel  { color: var(--green); }
-    .diagram .prop { color: var(--amber); }
-
-    /* ── FILE TREE ── */
-    .file-tree {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 22px;
-      font-size: 13px;
-      line-height: 2;
-      color: #aaa;
-    }
-
-    .file-tree .dir  { color: var(--tag); font-weight: 700; }
-    .file-tree .note { color: #555; font-style: italic; }
-
-    /* ── WORKFLOW STEPS ── */
-    .steps {
-      counter-reset: step;
-      list-style: none;
-      margin-top: 12px;
-    }
-
-    .steps li {
-      counter-increment: step;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      margin-bottom: 14px;
-      color: #bbb;
-    }
-
-    .steps li::before {
-      content: counter(step);
-      font-family: 'Modak', cursive;
-      font-size: 22px;
-      color: var(--muted);
-      min-width: 28px;
-      line-height: 1.4;
-    }
-
-    /* ── CALLOUT ── */
-    .callout {
-      background: var(--surface);
-      border-left: 3px solid var(--amber);
-      border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
-      margin: 20px 0;
-      color: #bbb;
-      font-size: 13px;
-    }
-
-    .callout strong { color: var(--amber); }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      text-align: center;
-      padding: 40px 24px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    footer .logo-small {
-      font-family: 'Modak', cursive;
-      font-size: 28px;
-      color: var(--tag);
-      display: block;
-      margin-bottom: 8px;
-    }
-  </style>
-</head>
-<body>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="logo-text"><span class="chevron">&lt;</span>Renzo<span class="chevron">&gt;</span></div>
-  <p class="tagline">A terminal-based HTML editor that makes building websites easy</p>
-  <div class="install-box">python main.py index.html</div>
-</div>
-
-<div class="container">
-
-  <!-- FEATURES -->
-  <section class="section">
-    <div class="section-title">Features <span class="num">01</span></div>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <span class="icon">🌲</span>
-        <span class="label">Node Tree View</span>
-        <p class="desc">See your entire HTML structure as a live collapsible tree, right in the terminal.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">🔍</span>
-        <span class="label">Property Inspector</span>
-        <p class="desc">Select any tag and edit its attributes inline. Supports strings and boolean props.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">🏷️</span>
-        <span class="label">Tag Search</span>
-        <p class="desc">Browse all HTML tags by name with descriptions and insert them instantly.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">🌐</span>
-        <span class="label">Live Browser Preview</span>
-        <p class="desc">Your page hot-reloads at <code>127.0.0.1:5090</code> as you edit. No refresh needed.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">💾</span>
-        <span class="label">Save to File or Clipboard</span>
-        <p class="desc">Ctrl+S writes back to your file if one was passed, otherwise copies to clipboard.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">⌨️</span>
-        <span class="label">Fully Keyboard Driven</span>
-        <p class="desc">No mouse needed. Navigate, edit, move, and restructure nodes with keys alone.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- INSTALL -->
-  <section class="section">
-    <div class="section-title">Install <span class="num">02</span></div>
-    <p>Requires <strong>Python 3.8+</strong>. Install dependencies with pip:</p>
-    <pre><code><span class="fn">pip</span> install blessed flask pyperclip</code></pre>
-    <p>Then run on any HTML file:</p>
-    <pre><code><span class="fn">python</span> main.py index.html</code></pre>
-    <p>Or run without an argument to start with a blank template (saves to clipboard):</p>
-    <pre><code><span class="fn">python</span> main.py</code></pre>
-    <div class="callout">
-      <strong>Note:</strong> You also need a <code>htmlTags.json</code> file in the project root — a list of <code>{"tag": "...", "description": "..."}</code> objects used by the tag search panel.
-    </div>
-  </section>
-
-  <!-- LAYOUT -->
-  <section class="section">
-    <div class="section-title">Interface <span class="num">03</span></div>
-    <p>The terminal splits into two panels side by side:</p>
-    <div class="diagram">
-<span class="dim">┌──────────────────────────┬──────────────────────────┐</span>
-<span class="hi">│         Nodes            │        Inspector         │</span>
-<span class="dim">├──────────────────────────┼──────────────────────────┤</span>
-<span class="dim">│</span>  └─<span class="hi">html</span>                  <span class="dim">│</span>  <span class="prop">lang : en</span>              <span class="dim">│</span>
-<span class="dim">│</span>    ├─<span class="hi">head</span>               <span class="dim">│</span>                          <span class="dim">│</span>
-<span class="dim">│</span>    └─<span class="hi">body</span>               <span class="dim">│</span>                          <span class="dim">│</span>
-<span class="dim">│</span>  <span class="sel">&gt;   └─h1</span>               <span class="dim">│</span>  <span class="prop">class : title</span>          <span class="dim">│</span>
-<span class="dim">│</span>        └─"hello!"        <span class="dim">│</span>                          <span class="dim">│</span>
-<span class="dim">├──────────────────────────┴──────────────────────────┤</span>
-<span class="dim">│</span>  Arrow keys to navigate <span class="dim">|</span> Enter to Edit <span class="dim">|</span> Esc back  <span class="dim">│</span>
-<span class="dim">│</span>  Webpage hosted at: <span class="sel">127.0.0.1:5090</span>                  <span class="dim">│</span>
-<span class="dim">└─────────────────────────────────────────────────────┘</span>
-    </div>
-    <p><strong>Left panel</strong> — the node tree. Navigate and edit text nodes inline.</p>
-    <p><strong>Right panel</strong> — the property inspector for the selected tag.</p>
-  </section>
-
-  <!-- KEYBINDS -->
-  <section class="section">
-    <div class="section-title">Keybindings <span class="num">04</span></div>
-
-    <div class="kb-section">
-      <h3>Node Tree</h3>
-      <table class="kb-table">
-        <tr><th>Key</th><th>Action</th></tr>
-        <tr><td><span class="key">j</span> / <span class="key">↑</span></td><td>Move selection up</td></tr>
-        <tr><td><span class="key">k</span> / <span class="key">↓</span></td><td>Move selection down</td></tr>
-        <tr><td><span class="key">Enter</span></td><td>Edit text node / open property inspector</td></tr>
-        <tr><td><span class="key">Esc</span></td><td>Confirm edit and return</td></tr>
-        <tr><td><span class="key">n</span></td><td>Open tag search to insert a child node</td></tr>
-        <tr><td><span class="key">i</span></td><td>Insert inner text node below selection</td></tr>
-        <tr><td><span class="key">x</span></td><td>Delete selected node</td></tr>
-        <tr><td><span class="key">Ctrl</span>+<span class="key">↓</span> / <span class="key">↑</span></td><td>Swap node with neighbour below / above</td></tr>
-        <tr><td><span class="key">Ctrl</span>+<span class="key">→</span> / <span class="key">←</span></td><td>Increase / decrease indent (nest or un-nest)</td></tr>
-        <tr><td><span class="key">Ctrl</span>+<span class="key">Shift</span>+<span class="key">↓</span> / <span class="key">↑</span></td><td>Move entire node group down / up</td></tr>
-        <tr><td><span class="key">Ctrl</span>+<span class="key">S</span></td><td>Save to file or copy to clipboard</td></tr>
-      </table>
-    </div>
-
-    <div class="kb-section">
-      <h3>Property Inspector</h3>
-      <table class="kb-table">
-        <tr><th>Key</th><th>Action</th></tr>
-        <tr><td><span class="key">↑</span> / <span class="key">↓</span></td><td>Navigate between properties</td></tr>
-        <tr><td><span class="key">Enter</span></td><td>Edit selected property value (or toggle boolean)</td></tr>
-        <tr><td><span class="key">Esc</span></td><td>Confirm edit / return to node tree</td></tr>
-        <tr><td><span class="key">n</span></td><td>Add a new property</td></tr>
-        <tr><td><span class="key">x</span></td><td>Delete selected property</td></tr>
-      </table>
-    </div>
-
-    <div class="kb-section">
-      <h3>Tag Search</h3>
-      <table class="kb-table">
-        <tr><th>Key</th><th>Action</th></tr>
-        <tr><td>Any character</td><td>Type to filter tags by name</td></tr>
-        <tr><td><span class="key">↑</span> / <span class="key">↓</span></td><td>Navigate results</td></tr>
-        <tr><td><span class="key">Enter</span></td><td>Insert selected tag as child of current node</td></tr>
-        <tr><td><span class="key">Esc</span></td><td>Close and return to node tree</td></tr>
-      </table>
-    </div>
-  </section>
-
-  <!-- WORKFLOW -->
-  <section class="section">
-    <div class="section-title">Workflow Example <span class="num">05</span></div>
-    <p>Adding a styled button to your page from scratch:</p>
-    <ol class="steps">
-      <li>Navigate to the <code>body</code> node in the tree</li>
-      <li>Press <span class="key">n</span> to open tag search, type <code>button</code>, press <span class="key">Enter</span> to insert it</li>
-      <li>Press <span class="key">Enter</span> on the new <code>button</code> node to open the property inspector</li>
-      <li>Press <span class="key">n</span> to add a <code>class</code> property, type <code>btn</code>, press <span class="key">Enter</span></li>
-      <li>Press <span class="key">Esc</span> to return to the tree</li>
-      <li>Press <span class="key">i</span> to insert inner text, type <code>Click me</code>, press <span class="key">Enter</span></li>
-      <li>Check your browser at <code>127.0.0.1:5090</code> to see the result live</li>
-      <li>Press <span class="key">Ctrl</span>+<span class="key">S</span> to save</li>
-    </ol>
-  </section>
-
-  <!-- PROJECT STRUCTURE -->
-  <section class="section">
-    <div class="section-title">Project Structure <span class="num">06</span></div>
-    <div class="file-tree">
-<span class="dir">renzo/</span>
-├── <span class="dir">main.py</span>        <span class="note"># entry point, render loop, keyboard input</span>
-├── <span class="dir">inspector.py</span>   <span class="note"># node tree, property editor, HTML parser, node classes</span>
-├── <span class="dir">file.py</span>        <span class="note"># HTML state, serialisation, file/clipboard save</span>
-├── <span class="dir">network.py</span>     <span class="note"># Flask server + SSE stream for live browser preview</span>
-├── <span class="dir">tagSearch.py</span>   <span class="note"># tag search panel</span>
-├── <span class="dir">htmlTags.json</span>  <span class="note"># tag database used by search</span>
-└── <span class="dir">renzo.png</span>      <span class="note"># project logo</span>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section">
-    <div class="section-title">How It Works <span class="num">07</span></div>
-    <p>Renzo parses your HTML into a flat list of <code>node</code> and <code>inner</code> objects, each carrying an <code>indent</code> level representing nesting depth. When you make edits, <code>file.convertToString()</code> rebuilds the full HTML string from that list. <code>network.py</code> then streams the update to the browser over SSE so the preview refreshes automatically without any page reload.</p>
-  </section>
-
-  <!-- KNOWN LIMITATIONS -->
-  <section class="section">
-    <div class="section-title">Known Limitations <span class="num">08</span></div>
-    <div class="callout">
-      <strong>File loading:</strong> Pass a file path as an argument (<code>python main.py index.html</code>) to load your own HTML. Without an argument, Renzo starts with a blank template and saves to clipboard instead of disk.
-    </div>
-    <div class="callout" style="border-left-color: var(--red);">
-      <strong>Large documents:</strong> Very large HTML files may cause rendering slowness due to full-screen terminal redraws on every frame.
-    </div>
-    <div class="callout" style="border-left-color: var(--blue);">
-      <strong>Group move edge cases:</strong> Ctrl+Shift+Up/Down has some known bugs with deeply nested structures.
-    </div>
-  </section>
-
-</div>
-
-<footer>
-  <span class="logo-small">&lt;Renzo&gt;</span>
-  MIT License &mdash; built for people who like their tools fast and in the terminal
-</footer>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+                                    Renzo — terminal HTML editor                
+        </title>
+    </head>
+    <body>
+        <div class="wrap">
+            <h1>
+                                                &lt;Renzo&gt;                        
+            </h1>
+            <p style="font-size: 1rem; color: #aaa; margin-top: -0.2rem;">
+                                                terminal-based HTML editor — no mouse, no bloat                        
+            </p>
+            <div class="cmd">
+                                                    $ python main.py index.html                          
+            </div>
+            <br>            </br>
+            <div>
+                                                        Yes this website was actually writen in renzo lol                        
+            </div>
+            <h2>
+                                                Features                        
+            </h2>
+            <ul class="feature-list">
+                <li>
+                    <strong>
+                                                                        Node tree view                                        
+                    </strong>
+                </li>
+                <li>
+                    <strong>
+                                                                        Property inspector                                        
+                    </strong>
+                </li>
+                <li>
+                    <strong>
+                                                                        Tag search                                        
+                    </strong>
+                </li>
+                <li>
+                    <strong>
+                                                                        Live browser preview                                        
+                    </strong>
+                    <code>
+                                                                        127.0.0.1:5090                                        
+                    </code>
+                </li>
+                <li>
+                    <strong>
+                                                                        Save to file or clipboard                                        
+                    </strong>
+                    <code>
+                                                                        Ctrl+S                                        
+                    </code>
+                </li>
+                <li>
+                    <strong>
+                                                                        100% keyboard driven                                        
+                    </strong>
+                </li>
+            </ul>
+            <h2>
+                                                Install                        
+            </h2>
+            <p>
+                                                Requires                                 
+                <strong>
+                                                            Python 3.8+                                
+                </strong>
+            </p>
+            <pre>
+                <code>
+                                                            pip install blessed flask pyperclip                                
+                </code>
+            </pre>
+            <p>
+                                                Run on any HTML file or start from scratch:                        
+            </p>
+            <pre>
+                <code>
+                                                            python main.py index.html    # load existing filepython main.py                # blank project (clipboard save)                                
+                </code>
+            </pre>
+        </div>
+    </body>
 </html>
+<h2>
+        Workflow example
+</h2>
+<p>
+        Build a button with one class — live preview, no browser refresh.
+</p>
+<ol class="steps">
+    <li>
+                Select         
+        <code>
+                        &lt;body&gt;        
+        </code>
+    </li>
+    <li>
+                Press         
+        <span>
+                        n        
+        </span>
+        <code>
+                        button        
+        </code>
+        <span>
+                        Enter        
+        </span>
+    </li>
+    <li>
+                Press         
+        <span>
+                        Enter        
+        </span>
+    </li>
+    <li>
+                Press         
+        <span>
+                        n        
+        </span>
+        <code>
+                        class="btn"        
+        </code>
+        <span>
+                        Enter        
+        </span>
+    </li>
+    <li>
+                Press         
+        <span>
+                        Esc        
+        </span>
+        <span>
+                        i        
+        </span>
+        <code>
+                        Click me        
+        </code>
+        <span>
+                        Enter        
+        </span>
+    </li>
+    <li>
+                See changes live at         
+        <code>
+                        127.0.0.1:5090        
+        </code>
+    </li>
+    <li>
+                Press         
+        <span>
+                        Ctrl        
+        </span>
+        <span>
+                        S        
+        </span>
+    </li>
+</ol>
+<h2>
+        How it works
+</h2>
+<p>
+        Renzo parses HTML into a flat list of nodes + text objects, each with an     
+    <code>
+                indent    
+    </code>
+    <code>
+                convertToString()    
+    </code>
+    <code>
+                network.py    
+    </code>
+</p>
+<hr>
+    <footer>
+        <span>
+                        &lt;Renzo&gt;        
+        </span>
+        <br>
+                            MIT          
+        </br>
+    </footer>
+</hr>

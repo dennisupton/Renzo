@@ -39,7 +39,7 @@ def main():
         sys.stdout.write("\033[?25l")
         while True:
             key = term.inkey(timeout=0.005)
-
+            inspector.tagSelector.maxHeight = term.height -7
             if key:
                 try:
                     if key == "j" or key.code == term.KEY_UP:
@@ -60,18 +60,21 @@ def main():
                 lines[0] = "Tags".center(term.width//2,"─")
 
             for i in range(len(inspector.tagSelector.tags)):
-                text = inspector.tagSelector.tags[i].name 
-                if inspector.tagSelector.editing and i == inspector.tagSelector.selectedtag:
-                    text = text[:inspector.tagSelector.cursorPos] + "|" + text[inspector.tagSelector.cursorPos:]
-                if isinstance(inspector.tagSelector.tags[i],inspector.inner):
-                    text = '"'+text+'"'  
-                if len(inspector.tagSelector.tags) >= i+2 and checkExtendedIndent(indents,i):
-                    lines[i+1] = " "+(inspector.tagSelector.tags[i].indent)*"│ "+"├─"+text
-                else:
-                    lines[i+1] = " "+(inspector.tagSelector.tags[i].indent)*"│ "+"└─"+text
-
-            lines[inspector.tagSelector.selectedtag+1] = ">" + lines[inspector.tagSelector.selectedtag+1][1:]
-
+                if i < len(lines)-1:
+                    
+                    text = inspector.tagSelector.tags[i+ inspector.tagSelector.offset].name 
+                    if inspector.tagSelector.editing and i == inspector.tagSelector.selectedtag:
+                        text = text[:inspector.tagSelector.cursorPos] + "|" + text[inspector.tagSelector.cursorPos:]
+                    if isinstance(inspector.tagSelector.tags[i+ inspector.tagSelector.offset],inspector.inner):
+                        text = '"'+text+'"'  
+                    if len(inspector.tagSelector.tags) >= i+2 and checkExtendedIndent(indents,i):
+                        lines[i+1] = limitLineLength(" "+(inspector.tagSelector.tags[i+ inspector.tagSelector.offset].indent)*"│ "+"├─"+text,(term.width//2)-1)
+                    else:
+                        lines[i+1] = limitLineLength(" "+(inspector.tagSelector.tags[i+ inspector.tagSelector.offset].indent)*"│ "+"└─"+text,(term.width//2)-1)
+            try:
+                lines[inspector.tagSelector.selectedtag+1-inspector.tagSelector.offset] = ">" + lines[inspector.tagSelector.selectedtag+1-inspector.tagSelector.offset][1:]
+            except:
+                pass
             #Divider
             for l in range(len(lines)):
                 if len(lines[l]) < term.width//2:
@@ -117,10 +120,11 @@ def main():
                     text = inspector.propertyEditor.newPropName
                     lines[idx+2] += text[:inspector.propertyEditor.cursorPos] + "|" + text[inspector.propertyEditor.cursorPos:]                
             lines[0]
-            lines[-1] = "Arrow keys to navigate | Enter to Edit | Press Esc to go back | ctrl + arrow keys to move tags around"
+            lines[-1] = limitLineLength("Arrow keys to navigate | Enter to Edit | Press Esc to go back | ctrl + arrow keys to move tags around",term.width)
             url = "127.0.0.1:5090"
             lines.append("Webpage hosted at : "+hyperlink(url,url)+" "+str(file.debug))
             print(term.home + term.clear,end="",flush=True)
             render(lines)
+
 
 main()
