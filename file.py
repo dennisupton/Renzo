@@ -1,4 +1,6 @@
 import inspector
+import pyperclip
+
 
 currentFile='''
 <!DOCTYPE html>
@@ -17,7 +19,8 @@ currentFile='''
 
 debug = ""
 
-def load()
+def save():
+    pyperclip.copy("currentFile")
 
 def propertiesToString(properties):
     res = ""

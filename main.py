@@ -53,7 +53,7 @@ def main():
 
                     inspector.panel.keyPress(key,term)
                 except Exception as e:
-                    file.debug = "error happened" + str(e)
+                    file.debug = "error happened : " + str(e)
             lines = [" "]*(term.height-3)
             if inspector.panel == inspector.nodeSelector:
                 lines[0] = "Nodes".center(term.width//2,"─")
