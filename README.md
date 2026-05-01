@@ -40,29 +40,6 @@ renzo
 
 The browser preview will be available at `http://127.0.0.1:5090` immediately on launch.
 
----
-
-## Interface Layout
-
-The terminal is split into two panels:
-
-```
-┌─────────────────────────┬─────────────────────────┐
-│         tags           │        Inspector        │
-│                         │                         │
-│  └─html                 │  lang : en              │
-│    ├─head               │                         │
-│    └─body               │                         │
-│  >   └─h1               │                         │
-│                         │                         │
-├─────────────────────────┴─────────────────────────┤
-│  Arrow keys to navigate | Enter to Edit | Esc back│
-│  Webpage hosted at: 127.0.0.1:5090                │
-└───────────────────────────────────────────────────┘
-```
-
-- **Left panel** — The tag tree. Navigate with arrow keys, edit text tags inline.
-- **Right panel** — The property inspector for the currently selected tag.
 
 ---
 
@@ -123,30 +100,8 @@ Here is a typical flow for adding a styled button to your page:
 
 ---
 
-## Project Structure
-
-```
-renzo/
-├── main.py          # Entry point, rendering loop, keyboard input
-├── inspector.py     # tag tree panel, property editor, HTML parser, tag classes
-├── file.py          # HTML state, serialisation, clipboard save
-├── network.py       # Flask server + SSE stream for live browser preview
-├── tagSearch.py     # Tag search panel
-├── htmlTags.json    # Tag database used by search
-└── renzo.png        # Project logo
-```
-
----
-
-## How the HTML state works
-
-Renzo parses your HTML into a flat list of `tag` and `inner` objects, each with an `indent` level that represents nesting. When you make edits, `file.convertToString()` rebuilds the full HTML string from that list and `network.py` streams the update to the browser over SSE so the preview refreshes automatically.
-
----
-
 ## Known Limitations
 
-- The HTML loaded on startup is hardcoded in `file.py` (`currentFile`). To edit your own file, replace that string with your HTML.
 - Very large documents may cause rendering slowness in the terminal due to full-screen redraws on every frame.
 - Ctrl+Shift+Up/Down (group move) has some edge-case bugs with deeply nested structures.
 
