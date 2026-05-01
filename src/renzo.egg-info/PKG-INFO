@@ -1,13 +1,12 @@
 Metadata-Version: 2.4
 Name: renzo
-Version: 0.1.4
+Version: 0.1.5
 Summary: A CLI HTML Editor that makes it easy to create websites.
 Author-email: Dennis <thebosscyberden@gmail.com>
 License: MIT
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 Requires-Dist: flask
-Requires-Dist: json
 Requires-Dist: pyperclip
 Requires-Dist: blessed
 

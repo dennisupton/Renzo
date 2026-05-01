@@ -38,7 +38,7 @@ def main():
     with term.fullscreen(), term.cbreak():
         sys.stdout.write("\033[?25l")
         while True:
-            key = term.inkey(timeout=0.005)
+            key = term.inkey(timeout=0.01)
             inspector.tagSelector.maxHeight = term.height -7
             if key:
                 try:

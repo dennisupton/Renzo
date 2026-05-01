@@ -1,4 +1,3 @@
 flask
-json
 pyperclip
 blessed
