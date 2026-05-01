@@ -1,11 +1,15 @@
 Metadata-Version: 2.4
 Name: renzo
-Version: 0.1.2
+Version: 0.1.4
 Summary: A CLI HTML Editor that makes it easy to create websites.
 Author-email: Dennis <thebosscyberden@gmail.com>
 License: MIT
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
+Requires-Dist: flask
+Requires-Dist: json
+Requires-Dist: pyperclip
+Requires-Dist: blessed
 
 # ![Renzo](renzo.png)
 
@@ -33,17 +37,18 @@ Renzo is a CLI tool that lets you edit HTML files directly in your terminal. It 
 - pip packages:
 
 ```bash
-pip install blessed flask pyperclip
+pip install blessed flask pyperclip 
 ```
-
-You also need a `htmlTags.json` file in the project root (a list of `{ "tag": "...", "description": "..." }` objects used by the tag search panel).
+- NOTE : not all of these packages work with the pipx command so please use pip install blessed flask pyperclip --break-system-packages if you are on linux
+- package will be auto installed if you run them through pip
 
 ---
 
 ## Running Renzo
 
 ```bash
-python main.py
+pip install renzo
+renzo 
 ```
 
 The browser preview will be available at `http://127.0.0.1:5090` immediately on launch.

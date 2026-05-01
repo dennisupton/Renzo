@@ -13,4 +13,5 @@ src/renzo.egg-info/PKG-INFO
 src/renzo.egg-info/SOURCES.txt
 src/renzo.egg-info/dependency_links.txt
 src/renzo.egg-info/entry_points.txt
+src/renzo.egg-info/requires.txt
 src/renzo.egg-info/top_level.txt
