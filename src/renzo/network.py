@@ -1,4 +1,4 @@
-import file
+import renzo.file as file
 import threading
 from flask import Flask, Response, stream_with_context
 import time

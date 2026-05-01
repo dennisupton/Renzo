@@ -1,0 +1,16 @@
+MANIFEST.in
+README.md
+pyproject.toml
+src/renzo/__init__.py
+src/renzo/file.py
+src/renzo/htmlTags.json
+src/renzo/inspector.py
+src/renzo/main.py
+src/renzo/network.py
+src/renzo/setup.py
+src/renzo/tagSearch.py
+src/renzo.egg-info/PKG-INFO
+src/renzo.egg-info/SOURCES.txt
+src/renzo.egg-info/dependency_links.txt
+src/renzo.egg-info/entry_points.txt
+src/renzo.egg-info/top_level.txt

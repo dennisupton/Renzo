@@ -1,3 +1,12 @@
+Metadata-Version: 2.4
+Name: renzo
+Version: 0.1.2
+Summary: A CLI HTML Editor that makes it easy to create websites.
+Author-email: Dennis <thebosscyberden@gmail.com>
+License: MIT
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
 # ![Renzo](renzo.png)
 
 # Renzo
@@ -34,8 +43,7 @@ You also need a `htmlTags.json` file in the project root (a list of `{ "tag": ".
 ## Running Renzo
 
 ```bash
-pip install renzo
-renzo 
+python main.py
 ```
 
 The browser preview will be available at `http://127.0.0.1:5090` immediately on launch.

@@ -1,9 +1,9 @@
 from blessed import Terminal
 import sys
-import file
-import inspector
-import network
-import tagSearch
+import renzo.file as file
+import renzo.inspector as inspector
+import renzo.network as network
+import renzo.tagSearch as tagSearch
 term = Terminal()
 
 
@@ -127,4 +127,3 @@ def main():
             render(lines)
 
 
-main()

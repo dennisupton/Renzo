@@ -1,8 +1,10 @@
 import json
-import file
-import inspector
+import renzo.file as file
+import renzo.inspector as inspector
+from importlib.resources import open_text
+import json
 
-with open('htmlTags.json') as f:
+with open_text("renzo", "htmlTags.json") as f:
     tags = json.load(f)
 
 class searchPanel:

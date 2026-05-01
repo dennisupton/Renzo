@@ -1,4 +1,4 @@
-import inspector
+import renzo.inspector as inspector
 import pyperclip
 import sys
 

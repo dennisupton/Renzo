@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+renzo = "renzo.main:main"
+
+[tool.setuptools.package-data]
+renzo = ["htmlTags.json"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "renzo"
+version = "0.1.2"
+description = "A CLI HTML Editor that makes it easy to create websites."
+authors = [
+    { name="Dennis", email="thebosscyberden@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "MIT"}

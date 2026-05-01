@@ -1,7 +1,7 @@
 import re
-import file
-import inspector
-import tagSearch
+import renzo.file as file
+import renzo.inspector as inspector
+import renzo.tagSearch as tagSearch
 
 class inspectorPanel:
     def __init__(self):
