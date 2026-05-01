@@ -8,6 +8,8 @@ Renzo is a CLI tool that lets you edit HTML files directly in your terminal. It 
 
 ---
 
+
+
 ## Features
 
 - **tag tree view** — See your entire HTML structure as a collapsible tree
@@ -15,6 +17,10 @@ Renzo is a CLI tool that lets you edit HTML files directly in your terminal. It 
 - **Tag search** — Browse and insert HTML tags by name with descriptions
 - **Live browser preview** — Your page hot-reloads in the browser as you edit (served at `http://127.0.0.1:5090`)
 - **Clipboard save** — Copy the generated HTML to your clipboard instantly with `Ctrl+S`
+
+## Demo Video
+https://github.com/user-attachments/assets/6ba56b6f-57bf-4566-975f-8b37f74f6c29
+
 
 ---
 
