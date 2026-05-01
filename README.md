@@ -26,8 +26,7 @@ Renzo is a CLI tool that lets you edit HTML files directly in your terminal. It 
 ```bash
 pip install blessed flask pyperclip
 ```
-
-You also need a `htmlTags.json` file in the project root (a list of `{ "tag": "...", "description": "..." }` objects used by the tag search panel).
+- package will be auto installed if you run them through pi
 
 ---
 
